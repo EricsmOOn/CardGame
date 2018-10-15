@@ -26,6 +26,6 @@ public abstract class Card {
     public String cardName;
     public String cardDesc;
 
-
+    double x;
 
 }
