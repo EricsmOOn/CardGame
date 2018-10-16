@@ -7,6 +7,7 @@ import cn.ericmoon.cardGame.controller.HandCardController;
 import cn.ericmoon.cardGame.gameRepository.ApKeySource;
 import cn.ericmoon.cardGame.gameRepository.BpKeySource;
 import cn.ericmoon.cardGame.gameRepository.CpKeySource;
+import cn.ericmoon.cardGame.keys.AllKeyInit;
 
 import java.util.List;
 
@@ -64,14 +65,7 @@ public class GameStart {
         Player ai = new Player(AI_INFO.getMaxHp(),AI_INFO.getHp(),AI_INFO.getMaxCardNum(),
                 AI_INFO.getGetCardNum(), AI_INFO.getLuckNum());
 
-        ApKeySource.getApk1().init(player);
-        ApKeySource.getApk2().init(ai);
-
-        BpKeySource.getBpk1().init(player);
-        BpKeySource.getBpk2().init(ai);
-
-        CpKeySource.getCpk1().init(player);
-        CpKeySource.getCpk2().init(ai);
+        AllKeyInit.allKeyInit(player,ai);
 
         //开局抽牌
         HandCardController hcc = new HandCardController();
