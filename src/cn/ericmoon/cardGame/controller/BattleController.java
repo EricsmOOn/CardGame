@@ -8,6 +8,7 @@ import cn.ericmoon.cardGame.gameRepository.CpKeySource;
 import cn.ericmoon.cardGame.keys.AfterPlayerKey;
 import cn.ericmoon.cardGame.keys.BuffPlayerKey;
 import cn.ericmoon.cardGame.keys.CardPlayerKey;
+import cn.ericmoon.cardGame.keys.KeyBag;
 
 /**
  * @ProjectName: CardGame
@@ -25,49 +26,64 @@ public class BattleController {
      */
     public static void useCard(Player player,Card card) throws Exception {
 
+        KeyBag kb = new KeyBag();
+        kb.setCard(card);
+
         CardPlayerKey cpk1 = CpKeySource.getCpk1();
         CardPlayerKey cpk2 = CpKeySource.getCpk2();
 
         if(cpk1.getPlayer().equals(player)){
-            AfterPlayerKey apk1 = ApKeySource.getApk1();
-            BuffPlayerKey bpk1 = BpKeySource.getBpk1();
-            useCardCore(cpk1,apk1,bpk1,card);
+            kb.setApkme(ApKeySource.getApk1());
+            kb.setBpkme(BpKeySource.getBpk1());
+            kb.setCpkme(cpk1);
+
+            kb.setApken(ApKeySource.getApk2());
+            kb.setBpken(BpKeySource.getBpk2());
+            kb.setCpken(cpk2);
+
+            useCardCore(kb);
         }else if(cpk2.getPlayer().equals(player)){
-            AfterPlayerKey apk2 = ApKeySource.getApk2();
-            BuffPlayerKey bpk2 = BpKeySource.getBpk2();
-            useCardCore(cpk2,apk2,bpk2,card);
+            kb.setApkme(ApKeySource.getApk2());
+            kb.setBpkme(BpKeySource.getBpk2());
+            kb.setCpkme(cpk2);
+
+            kb.setApken(ApKeySource.getApk1());
+            kb.setBpken(BpKeySource.getBpk1());
+            kb.setCpken(cpk1);
+
+            useCardCore(kb);
         }else throw new Exception("userCard找不到该用户");
 
     }
 
-    public static void useCardCore(CardPlayerKey cpk, AfterPlayerKey apk, BuffPlayerKey bpk,Card card) throws Exception {
+    public static void useCardCore(KeyBag keyBag) throws Exception {
 
         //先删除手牌中的这张卡
-        cpk.deleteCard(card);
+        keyBag.getCpkme().deleteCard(keyBag.getCard());
 
         //卡牌种类分流
-        switch (card.cardType){
+        switch (keyBag.getCard().cardType){
                 //Damage
             case 1:
-                useDamageCardCore(cpk, apk, bpk, card);
+                useDamageCardCore(keyBag);
             break;
 
             //Buff
             case 2:
-                Buff buff = (Buff)card;
-                if(buff.isDebuff())useDeBuffCardCore(cpk, apk, bpk, card);
-                else if(!buff.isDebuff())useBuffCardCore(cpk, apk, bpk, card);
+                Buff buff = (Buff) keyBag.getCard();
+                if(buff.isDebuff())useDeBuffCardCore(keyBag);
+                else if(!buff.isDebuff())useBuffCardCore(keyBag);
                 default : throw new Exception("Buff分流错误");
 
                 //After
-            case 3:useAfterCardCore(cpk, apk, bpk, card);
+            case 3:useAfterCardCore(keyBag);
             break;
         }
     }
 
-    public static void useDamageCardCore(CardPlayerKey cpk, AfterPlayerKey apk, BuffPlayerKey bpk,Card card){
+    public static void useDamageCardCore(KeyBag keyBag){
         //强制类型转换
-        DamageCard damageCard = (DamageCard) card;
+        DamageCard damageCard = (DamageCard) keyBag.getCard();
 
         //攻击卡牌种类分流
         switch (damageCard.getDamageType()){
@@ -80,9 +96,9 @@ public class BattleController {
         }
     }
 
-    public static void useBuffCardCore(CardPlayerKey cpk, AfterPlayerKey apk, BuffPlayerKey bpk,Card card){
+    public static void useBuffCardCore(KeyBag keyBag){
         //强制类型转换
-        BuffCard buffCard = (BuffCard) card;
+        BuffCard buffCard = (BuffCard) keyBag.getCard();
 
         //BUff卡牌种类分流
         switch (buffCard.getBuffType()){
@@ -96,9 +112,9 @@ public class BattleController {
     }
 
 
-    public static void useDeBuffCardCore(CardPlayerKey cpk, AfterPlayerKey apk, BuffPlayerKey bpk,Card card){
+    public static void useDeBuffCardCore(KeyBag keyBag){
         //强制类型转换
-        DeBuffCard deBuffCard = (DeBuffCard) card;
+        DeBuffCard deBuffCard = (DeBuffCard) keyBag.getCard();
 
         //DeBuff卡牌种类分流
         switch (deBuffCard.getBuffType()){
@@ -112,9 +128,9 @@ public class BattleController {
     }
 
 
-    public static void useAfterCardCore(CardPlayerKey cpk, AfterPlayerKey apk, BuffPlayerKey bpk,Card card){
+    public static void useAfterCardCore(KeyBag keyBag){
         //强制类型转换
-        AfterCard afterCard = (AfterCard) card;
+        AfterCard afterCard = (AfterCard) keyBag.getCard();
 
         //攻击卡牌种类分流
         switch (afterCard.getAfterType()){

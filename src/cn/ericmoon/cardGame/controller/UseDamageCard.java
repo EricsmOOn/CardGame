@@ -1,5 +1,10 @@
 package cn.ericmoon.cardGame.controller;
 
+import cn.ericmoon.cardGame.cards.Card;
+import cn.ericmoon.cardGame.keys.AfterPlayerKey;
+import cn.ericmoon.cardGame.keys.BuffPlayerKey;
+import cn.ericmoon.cardGame.keys.CardPlayerKey;
+
 /**
  * @ProjectName: CardGame
  * @CoderName: Eric Wong
@@ -8,4 +13,8 @@ package cn.ericmoon.cardGame.controller;
  */
 public class UseDamageCard {
 
+    public static void commonAttack(CardPlayerKey cpk, AfterPlayerKey apk, BuffPlayerKey bpk, Card card){
+
+
+    }
 }
