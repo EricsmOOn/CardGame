@@ -11,7 +11,7 @@ public class Bug {
  * @ProjectName: CardGame
  *
  * 1.触发瓮中捉鳖返回 null
- *
+ * 2.添加总仓库
  *
  *
  *
