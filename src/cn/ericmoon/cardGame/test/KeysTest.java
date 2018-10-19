@@ -1,6 +1,6 @@
 package cn.ericmoon.cardGame.test;
 
-import cn.ericmoon.cardGame.Player.Player;
+import cn.ericmoon.cardGame.player.Player;
 import cn.ericmoon.cardGame.cards.DamageCard;
 import cn.ericmoon.cardGame.keys.CardPlayerKey;
 

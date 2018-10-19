@@ -13,8 +13,11 @@ import lombok.Data;
  * 2-抽牌修改
  * 3-运气修改
  *
+ * isDebuff True->debuffcard false->buffcard
+ *
  */
 @Data
 public abstract class Buff extends Card {
     private int buffType;
+    private boolean isDebuff;
 }

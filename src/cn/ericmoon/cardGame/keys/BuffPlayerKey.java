@@ -1,6 +1,6 @@
 package cn.ericmoon.cardGame.keys;
 
-import cn.ericmoon.cardGame.Player.Player;
+import cn.ericmoon.cardGame.player.Player;
 import cn.ericmoon.cardGame.cards.BuffCard;
 import cn.ericmoon.cardGame.cards.DeBuffCard;
 import cn.ericmoon.cardGame.exception.NoSuchCard;

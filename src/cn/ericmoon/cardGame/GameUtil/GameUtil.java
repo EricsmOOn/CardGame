@@ -7,8 +7,6 @@ import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.io.IOException;
 
-import static javax.imageio.ImageIO.read;
-
 /**
  * 加载图片代码
  */

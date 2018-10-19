@@ -1,6 +1,5 @@
 package cn.ericmoon.cardGame.controller;
 
-import cn.ericmoon.cardGame.Player.Player;
 import cn.ericmoon.cardGame.cards.*;
 import cn.ericmoon.cardGame.tools.RandomNumTools;
 
@@ -81,6 +80,7 @@ public class CardCreaterController {
     private BuffCard buffCardCreater(double luck) throws Exception {
 
         BuffCard buffCard = new BuffCard();
+        buffCard.setDebuff(false);
 
         switch (RandomNumTools.cardChoose()){
             case 1:
@@ -118,6 +118,7 @@ public class CardCreaterController {
     private DeBuffCard deBuffCardCreater(double luck) throws Exception {
 
         DeBuffCard deBuffCard = new DeBuffCard();
+        deBuffCard.setDebuff(true);
 
         switch (RandomNumTools.cardChoose()){
             case 1:
