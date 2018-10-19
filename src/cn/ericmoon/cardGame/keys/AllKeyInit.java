@@ -1,6 +1,6 @@
 package cn.ericmoon.cardGame.keys;
 
-import cn.ericmoon.cardGame.Player.Player;
+import cn.ericmoon.cardGame.player.Player;
 import cn.ericmoon.cardGame.gameRepository.ApKeySource;
 import cn.ericmoon.cardGame.gameRepository.BpKeySource;
 import cn.ericmoon.cardGame.gameRepository.CpKeySource;

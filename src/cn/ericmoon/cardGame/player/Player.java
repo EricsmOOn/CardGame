@@ -1,4 +1,4 @@
-package cn.ericmoon.cardGame.Player;
+package cn.ericmoon.cardGame.player;
 
 import lombok.Data;
 
@@ -27,4 +27,11 @@ public class Player {
     }
 
     public Player() { }
+
+    public void setHp(int hp) {
+        if(hp > this.getMaxHp()){
+            hp = this.getMaxHp();
+        }
+        this.Hp = hp;
+    }
 }

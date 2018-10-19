@@ -11,7 +11,7 @@ import lombok.Data;
  * afterType
  * 1-反弹攻击伤害
  * 2-阻止一次Buff
- * 3-死亡后复活
+ * 3-阻止一次死亡伤害
  *
  */
 @Data

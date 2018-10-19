@@ -1,6 +1,9 @@
 package cn.ericmoon.cardGame.controller;
 
-import cn.ericmoon.cardGame.Player.Player;
+import cn.ericmoon.cardGame.cards.BuffCard;
+import cn.ericmoon.cardGame.cards.DeBuffCard;
+import cn.ericmoon.cardGame.keys.BuffPlayerKey;
+import cn.ericmoon.cardGame.player.Player;
 import cn.ericmoon.cardGame.cards.Card;
 import cn.ericmoon.cardGame.keys.CardPlayerKey;
 
@@ -20,12 +23,28 @@ public class HandCardController {
      * @parameters  [cpk]
      * @return  void
      */
-    public void getCards(CardPlayerKey cpk) throws Exception {
+    public static void getCards(CardPlayerKey cpk , BuffPlayerKey bpk) throws Exception {
         Player player = cpk.getPlayer();
         List<Card> cards = cpk.getCards();
+        List<BuffCard> buffs = bpk.getBuffs();
+        List<DeBuffCard> deBuffs = bpk.getDeBuffs();
 
         int cardNum = player.getGetCardNum();
         double luck = player.getLuckNum();
+
+        for(BuffCard buff : buffs){
+            if(buff.getBuffType() == 2){
+                cardNum += buff.getBuffNumber();
+                buffs.remove(buff);
+            }
+        }
+
+        for(DeBuffCard deBuff : deBuffs){
+            if(deBuff.getBuffType() == 2){
+                cardNum -= deBuff.getBuffNumber();
+                deBuffs.remove(deBuff);
+            }
+        }
 
         CardCreaterController ccc = new CardCreaterController();
 
@@ -41,7 +60,7 @@ public class HandCardController {
      * @parameters  [cpk]
      * @return  void
      */
-    public void countCards(CardPlayerKey cpk)throws Exception{
+    public static void countCards(CardPlayerKey cpk) throws Exception{
         Player player = cpk.getPlayer();
         List<Card> cards = cpk.getCards();
 

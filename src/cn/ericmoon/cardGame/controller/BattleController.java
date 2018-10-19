@@ -1,20 +1,20 @@
 package cn.ericmoon.cardGame.controller;
 
-import cn.ericmoon.cardGame.Player.Player;
+import cn.ericmoon.cardGame.player.Player;
 import cn.ericmoon.cardGame.cards.*;
 import cn.ericmoon.cardGame.gameRepository.ApKeySource;
 import cn.ericmoon.cardGame.gameRepository.BpKeySource;
 import cn.ericmoon.cardGame.gameRepository.CpKeySource;
-import cn.ericmoon.cardGame.keys.AfterPlayerKey;
-import cn.ericmoon.cardGame.keys.BuffPlayerKey;
 import cn.ericmoon.cardGame.keys.CardPlayerKey;
 import cn.ericmoon.cardGame.keys.KeyBag;
+
+import java.util.List;
 
 /**
  * @ProjectName: CardGame
  * @CoderName: Eric Wong
  * @Date: 2018/10/15
- * @Desc: 战斗控制器 todo
+ * @Desc: 战斗控制器
  */
 public class BattleController {
 
@@ -53,7 +53,6 @@ public class BattleController {
 
             useCardCore(kb);
         }else throw new Exception("userCard找不到该用户");
-
     }
 
     public static void useCardCore(KeyBag keyBag) throws Exception {
@@ -62,7 +61,7 @@ public class BattleController {
         keyBag.getCpkme().deleteCard(keyBag.getCard());
 
         //卡牌种类分流
-        switch (keyBag.getCard().cardType){
+        outer : switch (keyBag.getCard().cardType){
                 //Damage
             case 1:
                 useDamageCardCore(keyBag);
@@ -71,6 +70,16 @@ public class BattleController {
             //Buff
             case 2:
                 Buff buff = (Buff) keyBag.getCard();
+
+                //反制牌 直接阻断Buff
+                List<AfterCard> afterCards = keyBag.getApken().getAfterCards();
+                for(AfterCard after : afterCards){
+                    if(after.getAfterType() == 2){
+                        break outer;
+                    }
+                }
+                keyBag.getApken().deleteAfter((AfterCard)keyBag.getCard());
+
                 if(buff.isDebuff())useDeBuffCardCore(keyBag);
                 else if(!buff.isDebuff())useBuffCardCore(keyBag);
                 default : throw new Exception("Buff分流错误");
@@ -88,11 +97,11 @@ public class BattleController {
         //攻击卡牌种类分流
         switch (damageCard.getDamageType()){
                 //普通攻击
-            case 1:
+            case 1:UseDamageCard.commonAttack(keyBag);break;
                 //全力攻击
-            case 2:
+            case 2:UseDamageCard.fullAttack(keyBag);break;
                 //神圣攻击
-            case 3:
+            case 3:UseDamageCard.holyAttack(keyBag);break;
         }
     }
 
@@ -100,14 +109,14 @@ public class BattleController {
         //强制类型转换
         BuffCard buffCard = (BuffCard) keyBag.getCard();
 
-        //BUff卡牌种类分流
+        //Buff卡牌种类分流
         switch (buffCard.getBuffType()){
                 //AttackUp
-            case 1:
+            case 1:UseBuffCard.attackUpBuff(keyBag);break;
                 //CardNumUp
-            case 2:
+            case 2:UseBuffCard.cardNumUpBuff(keyBag);break;
                 //LuckUp
-            case 3:
+            case 3:UseBuffCard.luckUpBuff(keyBag);break;
         }
     }
 
@@ -119,28 +128,20 @@ public class BattleController {
         //DeBuff卡牌种类分流
         switch (deBuffCard.getBuffType()){
                 //AttackDown
-            case 1:
+            case 1:UseDeBuffCard.attackDownDeBuff(keyBag);break;
                 //CardNumDown
-            case 2:
+            case 2:UseDeBuffCard.cardNumDownDeBuff(keyBag);break;
                 //LuckDown
-            case 3:
+            case 3:UseDeBuffCard.luckDownDeBuff(keyBag);break;
         }
     }
 
 
     public static void useAfterCardCore(KeyBag keyBag){
-        //强制类型转换
+        //强制类型转换  记得删除
         AfterCard afterCard = (AfterCard) keyBag.getCard();
-
-        //攻击卡牌种类分流
-        switch (afterCard.getAfterType()){
-                //AttackBack
-            case 1:
-                //BuffBan
-            case 2:
-                //DeadFree
-            case 3:
-        }
+        keyBag.getApkme().addAfter(afterCard);
     }
+
 
 }

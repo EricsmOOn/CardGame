@@ -13,7 +13,7 @@ import lombok.Getter;
 public enum BuffEnum {
 
     ATTACK_BUFF(2,"装上刺刀","对目标伤害加成",1,1),
-    CARD_BUFF(2,"行窃预兆","每回合多抽卡",2,1),
+    CARD_BUFF(2,"行窃预兆","下回合多抽卡",2,1),
     LUCK_BUFF(2,"Eric的祝福","增加自己的幸运值",3,1);
 
     private int cardType;
