@@ -99,7 +99,7 @@ public class GameStart {
     private static Scanner gameInit() throws Exception{
 
         Player player = new Player(PLAYER_INFO.getMaxHp(),PLAYER_INFO.getHp(), PLAYER_INFO.getMaxCardNum(),
-                PLAYER_INFO.getGetCardNum(),PLAYER_INFO.getGetCardNum());
+                PLAYER_INFO.getGetCardNum(),PLAYER_INFO.getLuckNum());
 
         Player ai = new Player(AI_INFO.getMaxHp(),AI_INFO.getHp(),AI_INFO.getMaxCardNum(),
                 AI_INFO.getGetCardNum(), AI_INFO.getLuckNum());

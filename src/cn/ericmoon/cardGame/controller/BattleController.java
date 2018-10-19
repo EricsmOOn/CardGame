@@ -61,7 +61,7 @@ public class BattleController {
         keyBag.getCpkme().deleteCard(keyBag.getCard());
 
         //卡牌种类分流
-        outer : switch (keyBag.getCard().cardType){
+        outer : switch (keyBag.getCard().cardType) {
                 //Damage
             case 1:
                 useDamageCardCore(keyBag);
@@ -73,12 +73,13 @@ public class BattleController {
 
                 //反制牌 直接阻断Buff
                 List<AfterCard> afterCards = keyBag.getApken().getAfterCards();
+
                 for(AfterCard after : afterCards){
                     if(after.getAfterType() == 2){
+                        keyBag.getApken().deleteAfter((AfterCard)keyBag.getCard());
                         break outer;
                     }
                 }
-                keyBag.getApken().deleteAfter((AfterCard)keyBag.getCard());
 
                 if(buff.isDebuff())useDeBuffCardCore(keyBag);
                 else if(!buff.isDebuff())useBuffCardCore(keyBag);

@@ -44,21 +44,32 @@ public class UseDamageCard {
 
         //反制卡牌清算
         List<AfterCard> afterCards = keyBag.getApken().getAfterCards();
+        AfterCard toBeDeleted  = null;
+        boolean havingType1 = false;
+
         if(afterCards.isEmpty()){
             Player player = keyBag.getApken().getPlayer();
             player.setHp(player.getHp() - damage);
-        }
-        for(AfterCard after : afterCards){
-            if(after.getAfterType() == 1){
+        } else {
+            for (AfterCard after : afterCards) {
+                if (after.getAfterType() == 1) {
+                    havingType1 = true;
+                    toBeDeleted = after;
+                    break;
+                }
+            }
+            if(havingType1) {
                 Player player = keyBag.getApkme().getPlayer();
                 player.setHp(player.getHp() - damage);
-            }else {
+            }
+            else {
                 Player player = keyBag.getApken().getPlayer();
                 player.setHp(player.getHp() - damage);
             }
-            afterCards.remove(after);
-        }
+            if(toBeDeleted != null)
+                afterCards.remove(toBeDeleted);
 
+        }
 
     }
 
