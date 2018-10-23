@@ -10,9 +10,9 @@ public class Bug {
 /**
  * @ProjectName: CardGame
  *
- * 1.触发瓮中捉鳖返回 null
- * 2.添加总仓库
- * 3.提交测试 Git
+ * 1.触发瓮中捉鳖返回 null////////////FINISH
+ * 2.添加总仓库//////////////////////FINISH
+ * 3.提交测试 Git////////////////////FINISH
  *
  *
  *
