@@ -21,24 +21,46 @@ public class UseDamageCard {
         //初始攻击力
         int damage = damageCard.getDamage();
 
+
+
+        boolean havingDebuff = false;
+        boolean havingBuff = false;
+        BuffCard bc = null;
+        DeBuffCard dbc = null;
+
+
         //BuffCard加成
         List<BuffCard> buffs = keyBag.getBpkme().getBuffs();
-        for (BuffCard buff : buffs) {
-            if (buff.getBuffType() == 1) {
-                damage += buff.getBuffNumber();
-                buffs.remove(buff);
+        if(!buffs.isEmpty()){
+            for (BuffCard buff : buffs) {
+                if (buff.getBuffType() == 1) {
+                    damage += buff.getBuffNumber();
+                    havingBuff = true;
+                    bc = buff;
+                    break;
+                }
+            }
+            if(havingBuff){
+                buffs.remove(bc);
             }
         }
 
+
         //DeBuff虚弱效果
         List<DeBuffCard> deBuffs = keyBag.getBpkme().getDeBuffs();
-        for(DeBuffCard deBuff : deBuffs){
-            if(deBuff.getBuffType() == 1){
-                damage -= deBuff.getBuffNumber();
-                if(damage < 0){
-                    damage = 0;
+        if(!deBuffs.isEmpty()){
+            for(DeBuffCard deBuff : deBuffs){
+                if(deBuff.getBuffType() == 1){
+                    damage -= deBuff.getBuffNumber();
+                    if(damage < 0){
+                        damage = 0;
+                    }
+                    havingDebuff = true;
+                    dbc = deBuff;
                 }
-                deBuffs.remove(deBuff);
+            }
+            if(havingDebuff){
+                deBuffs.remove(dbc);
             }
         }
 
@@ -53,12 +75,22 @@ public class UseDamageCard {
         //初始攻击力
         int damage = damageCard.getDamage();
 
+        boolean havingBuff = false;
+        BuffCard bc = null;
+
         //BuffCard加成
         List<BuffCard> buffs = keyBag.getBpkme().getBuffs();
-        for (BuffCard buff : buffs) {
-            if (buff.getBuffType() == 1) {
-                damage += buff.getBuffNumber();
-                buffs.remove(buff);
+        if(!buffs.isEmpty()){
+            for (BuffCard buff : buffs) {
+                if (buff.getBuffType() == 1) {
+                    damage += buff.getBuffNumber();
+                    havingBuff = true;
+                    bc = buff;
+                    break;
+                }
+            }
+            if(havingBuff){
+                buffs.remove(bc);
             }
         }
 
@@ -82,7 +114,7 @@ public class UseDamageCard {
 
         if(afterCards.isEmpty()){
             Player player = keyBag.getApken().getPlayer();
-            player.setLuckNum(player.getHp() - damage);
+            player.setLuckNum(player.getLuckNum() * damage);
         } else {
             for (AfterCard after : afterCards) {
                 if (after.getAfterType() == 1) {

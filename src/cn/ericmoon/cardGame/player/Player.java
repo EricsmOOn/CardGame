@@ -12,13 +12,15 @@ import lombok.Data;
 @Data
 public class Player {
 
+    private int id;
     private int maxHp;
     private int Hp;
     private int maxCardNum;
     private int getCardNum;
     private double luckNum;
 
-    public Player(int maxHp, int hp, int maxCardNum, int getCardNum, double luckNum) {
+    public Player(int id , int maxHp, int hp, int maxCardNum, int getCardNum, double luckNum) {
+        this.id = id;
         this.maxHp = maxHp;
         Hp = hp;
         this.maxCardNum = maxCardNum;
@@ -34,4 +36,16 @@ public class Player {
         }
         this.Hp = hp;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        Player player = (Player) o;
+
+        return id == player.id;
+    }
+
 }

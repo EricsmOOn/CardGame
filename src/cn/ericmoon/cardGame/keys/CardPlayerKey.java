@@ -32,7 +32,7 @@ public class CardPlayerKey extends Key {
     }
 
     public void deleteCard(Card card) throws NoSuchCard {
-        if(!this.cards.contains(card)) throw new NoSuchCard("没有这张手牌");
+        if(!this.cards.contains(card)) throw new NoSuchCard("没有这样的手牌");
         this.cards.remove(card);
     }
 

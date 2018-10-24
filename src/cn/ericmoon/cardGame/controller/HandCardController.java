@@ -25,25 +25,47 @@ public class HandCardController {
      */
     public static void getCards(CardPlayerKey cpk , BuffPlayerKey bpk) throws Exception {
         Player player = cpk.getPlayer();
-        List<Card> cards = cpk.getCards();
         List<BuffCard> buffs = bpk.getBuffs();
         List<DeBuffCard> deBuffs = bpk.getDeBuffs();
 
         int cardNum = player.getGetCardNum();
         double luck = player.getLuckNum();
 
-        for(BuffCard buff : buffs){
-            if(buff.getBuffType() == 2){
-                cardNum += buff.getBuffNumber();
-                buffs.remove(buff);
+        boolean havingDebuff = false;
+        boolean havingBuff = false;
+        BuffCard bc = null;
+        DeBuffCard dbc = null;
+
+        if(!buffs.isEmpty()){
+            for(BuffCard buff : buffs){
+                if(buff.getBuffType() == 2){
+                    cardNum += buff.getBuffNumber();
+                    havingBuff = true;
+                    bc = buff;
+                    break;
+                }
+            }
+            if(havingBuff){
+                buffs.remove(bc);
             }
         }
 
-        for(DeBuffCard deBuff : deBuffs){
-            if(deBuff.getBuffType() == 2){
-                cardNum -= deBuff.getBuffNumber();
-                deBuffs.remove(deBuff);
+        if(!deBuffs.isEmpty()){
+            for(DeBuffCard deBuff : deBuffs){
+                if(deBuff.getBuffType() == 2){
+                    cardNum -= deBuff.getBuffNumber();
+                    havingDebuff = true;
+                    dbc = deBuff;
+                    break;
+                }
             }
+            if(havingDebuff){
+                deBuffs.remove(dbc);
+            }
+        }
+
+        if(cardNum <= 0){
+            cardNum = 0;
         }
 
         CardCreaterController ccc = new CardCreaterController();
@@ -61,6 +83,7 @@ public class HandCardController {
      * @return  void
      */
     public static void countCards(CardPlayerKey cpk) throws Exception{
+
         Player player = cpk.getPlayer();
         List<Card> cards = cpk.getCards();
 
@@ -68,7 +91,7 @@ public class HandCardController {
         int num = cards.size() - maxCardNum;
 
         if(num > 0){
-            for(int i = 1;i < num;i++ ){
+            for(int i = 0;i < num;i++ ){
                 cards.remove(0);
             }
         }
