@@ -25,7 +25,6 @@ public class BattleController {
      * @return  void
      */
     public static void useCard(Player player,Card card) throws Exception {
-
         KeyBag kb = new KeyBag();
         kb.setCard(card);
 
@@ -41,7 +40,6 @@ public class BattleController {
             kb.setBpken(BpKeySource.getBpk2());
             kb.setCpken(cpk2);
 
-            useCardCore(kb);
         }else if(cpk2.getPlayer().equals(player)){
             kb.setApkme(ApKeySource.getApk2());
             kb.setBpkme(BpKeySource.getBpk2());
@@ -51,12 +49,12 @@ public class BattleController {
             kb.setBpken(BpKeySource.getBpk1());
             kb.setCpken(cpk1);
 
-            useCardCore(kb);
         }else throw new Exception("userCard找不到该用户");
+        
+        useCardCore(kb);
     }
 
     public static void useCardCore(KeyBag keyBag) throws Exception {
-
         //先删除手牌中的这张卡
         keyBag.getCpkme().deleteCard(keyBag.getCard());
 
@@ -76,14 +74,15 @@ public class BattleController {
 
                 for(AfterCard after : afterCards){
                     if(after.getAfterType() == 2){
-                        keyBag.getApken().deleteAfter((AfterCard)keyBag.getCard());
+                        keyBag.getApken().deleteAfter(after);
                         break outer;
                     }
                 }
 
-                if(buff.isDebuff())useDeBuffCardCore(keyBag);
-                else if(!buff.isDebuff())useBuffCardCore(keyBag);
-                default : throw new Exception("Buff分流错误");
+                if(buff.isDebuff()) {useDeBuffCardCore(keyBag);}
+                else if(!buff.isDebuff()){useBuffCardCore(keyBag);}
+
+                break;
 
                 //After
             case 3:useAfterCardCore(keyBag);

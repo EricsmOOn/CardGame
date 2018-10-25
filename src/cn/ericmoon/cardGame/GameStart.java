@@ -28,7 +28,10 @@ import static cn.ericmoon.cardGame.Enum.PlayerEnum.*;
 public class GameStart {
 
     public static void main(String[] str){
+
         try {
+            //        GamePannel f = new GamePannel();
+            //        f.LaunchFrame();
 
             //游戏初始化
             Scanner scn = gameInit();
@@ -39,6 +42,8 @@ public class GameStart {
             int input;
 
             while (true){
+
+                System.out.println("-------------------------------------------------------------------------");
 
                 if(playing){
                     cpk = CpKeySource.getCpk1();
@@ -53,7 +58,7 @@ public class GameStart {
                 //抓牌
                 HandCardController.getCards(cpk,bpk);
 
-                printer();
+                printer(cpk);
 
                 if(DeadController.preDeadController(ApKeySource.getApk1()) ||
                         DeadController.preDeadController(ApKeySource.getApk2()))
@@ -61,21 +66,17 @@ public class GameStart {
 
                 System.out.println("按 0 结束出牌 输入对应数字 1-5 出牌...");
 
-                int i = 1;//每回合剩余的牌是动态的 初始牌-1 因为设定了0为结束出牌
-
                 while (!cpk.getCards().isEmpty()){
 
-                    input = scn.nextInt();
+                    //input = scn.nextInt();
 
-                    if(input == 0) break;
+                    //if(input == 0) break;
 
-                    Card card = cpk.getCards().get(input-i);
+                    Card card = cpk.getCards().get(0);//测试注意 get(input - 1)
 
                     System.out.println("您出了:"+card.toString());
 
                     BattleController.useCard(cpk.getPlayer(),card);
-
-                    i++;
 
                 }
 
@@ -91,17 +92,15 @@ public class GameStart {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-//        GamePannel f = new GamePannel();
-//        f.LaunchFrame();
     }
 
 
     private static Scanner gameInit() throws Exception{
 
-        Player player = new Player(PLAYER_INFO.getMaxHp(),PLAYER_INFO.getHp(), PLAYER_INFO.getMaxCardNum(),
+        Player player = new Player(1,PLAYER_INFO.getMaxHp(),PLAYER_INFO.getHp(), PLAYER_INFO.getMaxCardNum(),
                 PLAYER_INFO.getGetCardNum(),PLAYER_INFO.getLuckNum());
 
-        Player ai = new Player(AI_INFO.getMaxHp(),AI_INFO.getHp(),AI_INFO.getMaxCardNum(),
+        Player ai = new Player(2,AI_INFO.getMaxHp(),AI_INFO.getHp(),AI_INFO.getMaxCardNum(),
                 AI_INFO.getGetCardNum(), AI_INFO.getLuckNum());
 
         AllKeyInit.allKeyInit(player,ai);
@@ -119,35 +118,32 @@ public class GameStart {
         }
     }
 
-    private static void printer() throws Exception{
+    private static void printer(CardPlayerKey cpk) throws Exception{
 
-        List<Card> cards1 = CpKeySource.getCpk1().getCards();
+        Player player = CpKeySource.getCpk1().getPlayer();
 
-        List<Card> cards2 = CpKeySource.getCpk2().getCards();
+        Player ai = CpKeySource.getCpk2().getPlayer();
 
+        System.out.print("PLAYER______:");
+        System.out.println("HP::"+player.getHp()+"//LUCK::"+player.getLuckNum());
+        System.out.println();
+        System.out.println("BUFF::"+BpKeySource.getBpk1().getBuffs()+"//DEBUFF::"+BpKeySource.getBpk1().getDeBuffs());
+        System.out.println("AFTER::"+ApKeySource.getApk1().getAfterCards());
+        System.out.println();
 
-        System.out.println("您的基本信息:");
+        System.out.print("AI__________:");
+        System.out.println("HP::"+ai.getHp()+"//LUCK::"+ai.getLuckNum());
+        System.out.println();
+        System.out.println("BUFF::"+BpKeySource.getBpk2().getBuffs()+"//DEBUFF::"+BpKeySource.getBpk2().getDeBuffs());
+        System.out.println("AFTER::"+ApKeySource.getApk2().getAfterCards());
+        System.out.println();
 
-        System.out.println(CpKeySource.getCpk1().getPlayer());
-
-
-        System.out.println("你的手牌:");
-        for (Card card:cards1) {
+        System.out.println("当前玩家手牌:");
+        for (Card card:cpk.getCards()) {
             System.out.println(">>>>"+card.getCardName()+"<<<<"+":"+'\n'+"伤害数值"+card.toString());
             System.out.println(card.getCardDesc());
             System.out.println();
         }
 
-        System.out.println("您的敌人的基本信息:");
-
-        System.out.println(CpKeySource.getCpk2().getPlayer());
-
-
-        System.out.println("你的敌人的手牌:");
-        for (Card card:cards2) {
-            System.out.println(">>>>"+card.getCardName()+"<<<<"+":"+'\n'+":"+"伤害数值"+card.toString());
-            System.out.println(card.getCardDesc());
-            System.out.println();
-        }
     }
 }

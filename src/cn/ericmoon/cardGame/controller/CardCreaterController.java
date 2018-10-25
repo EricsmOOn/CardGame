@@ -50,7 +50,7 @@ public class CardCreaterController {
                 damageCard.setCardName(COMMON_ATTACK.getCardName());
                 damageCard.setCardDesc(COMMON_ATTACK.getCardDesc());
                 damageCard.setDamageType(COMMON_ATTACK.getDamageType());
-                damageCard.setDamage(COMMON_ATTACK.getDamage()*(int)(5*luck));
+                damageCard.setDamage(COMMON_ATTACK.getDamage()*(int)(6*luck));
 
                 return damageCard;
 
@@ -59,7 +59,7 @@ public class CardCreaterController {
                 damageCard.setCardName(FULL_ATTACK.getCardName());
                 damageCard.setCardDesc(FULL_ATTACK.getCardDesc());
                 damageCard.setDamageType(FULL_ATTACK.getDamageType());
-                damageCard.setDamage(FULL_ATTACK.getDamage()*(int)(5*luck));
+                damageCard.setDamage(FULL_ATTACK.getDamage()*(int)(4*luck));
 
                 return damageCard;
 
@@ -69,7 +69,7 @@ public class CardCreaterController {
                 damageCard.setCardName(HOLY_ATTACK.getCardName());
                 damageCard.setCardDesc(HOLY_ATTACK.getCardDesc());
                 damageCard.setDamageType(HOLY_ATTACK.getDamageType());
-                damageCard.setDamage(HOLY_ATTACK.getDamage());
+                damageCard.setDamage(HOLY_ATTACK.getDamage()*(int)luck);
 
                 return damageCard;
 
@@ -87,7 +87,7 @@ public class CardCreaterController {
                 buffCard.setCardType(ATTACK_BUFF.getCardType());
                 buffCard.setCardName(ATTACK_BUFF.getCardName());
                 buffCard.setCardDesc(ATTACK_BUFF.getCardDesc());
-                buffCard.setBuffNumber(ATTACK_BUFF.getBuffNumber()*(int)(luck*2));
+                buffCard.setBuffNumber(ATTACK_BUFF.getBuffNumber());
                 buffCard.setBuffType(ATTACK_BUFF.getBuffType());
 
                 return buffCard;
@@ -125,7 +125,7 @@ public class CardCreaterController {
                 deBuffCard.setCardType(ATTACK_DEBUFF.getCardType());
                 deBuffCard.setCardName(ATTACK_DEBUFF.getCardName());
                 deBuffCard.setCardDesc(ATTACK_DEBUFF.getCardDesc());
-                deBuffCard.setBuffNumber(ATTACK_DEBUFF.getDeBuffNumber()*(int)(luck*2));
+                deBuffCard.setBuffNumber(ATTACK_DEBUFF.getDeBuffNumber());
                 deBuffCard.setBuffType(ATTACK_DEBUFF.getDeBuffType());
 
                 return deBuffCard;

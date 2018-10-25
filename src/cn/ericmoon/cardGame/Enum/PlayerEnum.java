@@ -10,7 +10,7 @@ import lombok.Getter;
  */
 @Getter
 public enum PlayerEnum {
-    PLAYER_INFO(100,100,5,3,1.0),AI_INFO(100,100,5,3,1.0);
+    PLAYER_INFO(100,100,3,2,1.0),AI_INFO(100,100,3,2,1.0);
 
     private int maxHp;
     private int Hp;
