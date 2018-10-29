@@ -15,9 +15,9 @@ public class GameUtil {
     private GameUtil(){
     }
 
-    public static Image getImage(String path){
+    public static Image getImage(String path) {
         BufferedImage bi = null;
-        try{
+        try {
             URL u = GameUtil.class.getClassLoader().getResource(path);
             bi = ImageIO.read(u);
         } catch(IOException e){
