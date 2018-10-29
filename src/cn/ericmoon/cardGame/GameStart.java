@@ -1,11 +1,10 @@
 package cn.ericmoon.cardGame;
 
-import cn.ericmoon.cardGame.Draw.GamePannel;
+import cn.ericmoon.cardGame.Draw.GameClient;
 import cn.ericmoon.cardGame.controller.BattleController;
 import cn.ericmoon.cardGame.controller.DeadController;
 import cn.ericmoon.cardGame.gameRepository.ApKeySource;
 import cn.ericmoon.cardGame.gameRepository.BpKeySource;
-import cn.ericmoon.cardGame.keys.AfterPlayerKey;
 import cn.ericmoon.cardGame.keys.BuffPlayerKey;
 import cn.ericmoon.cardGame.keys.CardPlayerKey;
 import cn.ericmoon.cardGame.player.Player;
@@ -14,7 +13,6 @@ import cn.ericmoon.cardGame.controller.HandCardController;
 import cn.ericmoon.cardGame.gameRepository.CpKeySource;
 import cn.ericmoon.cardGame.keys.AllKeyInit;
 
-import java.util.List;
 import java.util.Scanner;
 
 import static cn.ericmoon.cardGame.Enum.PlayerEnum.*;
@@ -27,31 +25,37 @@ import static cn.ericmoon.cardGame.Enum.PlayerEnum.*;
  */
 public class GameStart {
 
-    public static void main(String[] str){
+    public static void main(String[] str) {
 
         try {
-            //        GamePannel f = new GamePannel();
-            //        f.LaunchFrame();
 
             //游戏初始化
             Scanner scn = gameInit();
+
+            GameClient f = new GameClient();
+            f.LaunchFrame();
+
 
             boolean playing = true;
             CardPlayerKey cpk;
             BuffPlayerKey bpk;
             int input;
 
-            while (true){
+            while (true) {
 
                 System.out.println("-------------------------------------------------------------------------");
 
                 if(playing){
                     cpk = CpKeySource.getCpk1();
                     bpk = BpKeySource.getBpk1();
+                    f.cardPlayerKey = cpk;
+                    f.playerDesciption = "己方玩家出牌";
                     System.out.println("轮到玩家出牌");
                 }else {
                     cpk = CpKeySource.getCpk2();
                     bpk = BpKeySource.getBpk2();
+                    f.cardPlayerKey = cpk;
+                    f.playerDesciption = "宇宙无敌螺旋爆炸闪电霹雳飞天遁地酷炫AI出牌";
                     System.out.println("轮到电脑出牌");
                 }
 
@@ -61,12 +65,13 @@ public class GameStart {
                 printer(cpk);
 
                 if(DeadController.preDeadController(ApKeySource.getApk1()) ||
-                        DeadController.preDeadController(ApKeySource.getApk2()))
+                        DeadController.preDeadController(ApKeySource.getApk2())) {
                     break;
+                }
 
                 System.out.println("按 0 结束出牌 输入对应数字 1-5 出牌...");
 
-                while (!cpk.getCards().isEmpty()){
+                while (!cpk.getCards().isEmpty()) {
 
                     //input = scn.nextInt();
 
@@ -74,9 +79,12 @@ public class GameStart {
 
                     Card card = cpk.getCards().get(0);//测试注意 get(input - 1)
 
+                    Thread.sleep(400);
+
                     System.out.println("您出了:"+card.toString());
 
                     BattleController.useCard(cpk.getPlayer(),card);
+                    System.out.println("HP: " + cpk.getPlayer().getHp());
 
                 }
 
@@ -92,6 +100,7 @@ public class GameStart {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+
     }
 
 
