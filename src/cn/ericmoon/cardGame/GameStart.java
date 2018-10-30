@@ -1,6 +1,7 @@
 package cn.ericmoon.cardGame;
 
 import cn.ericmoon.cardGame.Draw.GameClient;
+import cn.ericmoon.cardGame.Draw.Helper;
 import cn.ericmoon.cardGame.controller.BattleController;
 import cn.ericmoon.cardGame.controller.DeadController;
 import cn.ericmoon.cardGame.gameRepository.ApKeySource;
@@ -45,53 +46,77 @@ public class GameStart {
 
                 System.out.println("-------------------------------------------------------------------------");
 
+                f.cardPlayerKeySelf = CpKeySource.getCpk1();
+                f.cardPlayerKeyEnemy = CpKeySource.getCpk2();
+                f.playing = playing;
+
                 if(playing){
                     cpk = CpKeySource.getCpk1();
                     bpk = BpKeySource.getBpk1();
-                    f.cardPlayerKey = cpk;
                     f.playerDesciption = "己方玩家出牌";
                     System.out.println("轮到玩家出牌");
                 }else {
                     cpk = CpKeySource.getCpk2();
                     bpk = BpKeySource.getBpk2();
-                    f.cardPlayerKey = cpk;
-                    f.playerDesciption = "宇宙无敌螺旋爆炸闪电霹雳飞天遁地酷炫AI出牌";
+                    f.playerDesciption = "AI出牌";
                     System.out.println("轮到电脑出牌");
                 }
+
 
                 //抓牌
                 HandCardController.getCards(cpk,bpk);
 
                 printer(cpk);
 
+                f.removeAllComponents();
+                f.drawButtons();
+                f.drawInfoSelf();
+                f.repaint();
+
+                System.out.println("repaint执行完毕!");
+                Helper.printLine();
+
+
                 if(DeadController.preDeadController(ApKeySource.getApk1()) ||
                         DeadController.preDeadController(ApKeySource.getApk2())) {
                     break;
                 }
 
-                System.out.println("按 0 结束出牌 输入对应数字 1-5 出牌...");
 
-                while (!cpk.getCards().isEmpty()) {
-
-                    //input = scn.nextInt();
-
-                    //if(input == 0) break;
-
-                    Card card = cpk.getCards().get(0);//测试注意 get(input - 1)
-
-                    Thread.sleep(400);
-
-                    System.out.println("您出了:"+card.toString());
-
-                    BattleController.useCard(cpk.getPlayer(),card);
-                    System.out.println("HP: " + cpk.getPlayer().getHp());
-
+                //System.out.println("按 0 结束出牌 输入对应数字 1-5 出牌...");
+                int chosenIndex = 0;
+                if (playing) {
+                    if (f.cardPlayerKeySelf != null) {
+                        while (f.chosenIndexOfButton == -1) {
+                            // wait for the chosenCard
+                            //System.out.println("尝试获取index");
+                            f.configureIndex();
+                        }
+                        chosenIndex = f.chosenIndexOfButton;
+                    }
+                } else {
+                    chosenIndex = 0;
                 }
+
+                System.out.println("选中了一张牌,index: " + chosenIndex);
+
+                //input = scn.nextInt();
+
+                //if(input == 0) break;
+
+                Card card = cpk.getCards().get(chosenIndex);//测试注意 get(input - 1)
+
+                System.out.println("您出了:"+card.toString());
+
+                BattleController.useCard(cpk.getPlayer(),card);
+                //System.out.println("HP: " + cpk.getPlayer().getHp());
 
                 //卡牌清算
                 HandCardController.countCards(cpk);
 
                 playing = !playing;
+
+                System.out.println("完成一次出牌");
 
             }
 
