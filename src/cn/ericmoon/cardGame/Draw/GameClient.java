@@ -1,6 +1,7 @@
 package cn.ericmoon.cardGame.Draw;
 
 import cn.ericmoon.cardGame.CONSTANT;
+import cn.ericmoon.cardGame.Event.CardMouseEvent;
 import cn.ericmoon.cardGame.GameUtil.GameUtil;
 import cn.ericmoon.cardGame.cards.Card;
 import cn.ericmoon.cardGame.gameRepository.AllKeySource;
@@ -18,15 +19,26 @@ import java.util.ArrayList;
 public class GameClient extends JFrame {
 
     Toolkit toolkit = this.getToolkit();
-    Image backgroundImage = toolkit.getImage("images/background.png");
     Container container = this.getContentPane();
-    public CardPlayerKey cardPlayerKey;
+
+    public CardPlayerKey cardPlayerKeySelf;
+    public CardPlayerKey cardPlayerKeyEnemy;
     public String playerDesciption = "";
+    public int chosenIndexOfButton = -1;
+
     private JLabel label;
     private JLabel labelHP;
+
+    public boolean playing = false;
+
     ArrayList<JButton> buttons = new ArrayList<>();
+    ArrayList<CardMouseEvent> cardMouseEventsSelf = new ArrayList<>();
+    ArrayList<CardMouseEvent> cardMouseEventsEnemy = new ArrayList<>();
 
-
+    /**
+     * 双缓冲
+     */
+/*
     private Image offScreenImage = null;
 
     public void update(Graphics g){
@@ -37,12 +49,12 @@ public class GameClient extends JFrame {
         paint(gOff);
         g.drawImage(offScreenImage,0,0,null);
     }
-
+*/
 
     public void LaunchFrame() {
         configureFrame();
-        System.out.println("width: " + backgroundImage.getWidth(this) + " height: " + backgroundImage.getHeight(this));
-        //new CardThread().start();
+       // new CardThread().start();
+
     }
 
     public void configureFrame() {
@@ -53,99 +65,155 @@ public class GameClient extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         this.container.setLayout(null);
-        this.setResizable(true);
-        this.
-        new CardThread().start();
+        this.setResizable(false);
+        this.container.setBackground(Color.BLACK);
         System.out.println("成功设置窗口！");
     }
 
     public JButton getButton(String text, int x, int y, int width, int height) {
+        //System.out.println("getButton1");
         JButton jButton = new JButton(text);
+        //System.out.println("getButton2");
         jButton.setBounds(x,y,width,height);
+        //System.out.println("getButton3");
         return jButton;
     }
 
     public void removeAllComponents() {
-        for(int i=0;i<buttons.size();i++) {
-            JButton button = buttons.get(i);
-            container.remove(button);
+        if(cardPlayerKeySelf != null) {
+
+            if(buttons !=null){
+                for (int i = 0; i < buttons.size(); i++) {
+                    JButton button = buttons.get(i);
+                    container.remove(button);
+                }
+                buttons.clear();
+            }
+            //System.out.println("清理卡牌完毕！");
+
+            if (this.label != null)
+                container.remove(label);
+            //System.out.println("清理玩家标签！");
+            if (this.labelHP != null)
+                container.remove(labelHP);
+            //System.out.println("清理血量！");
+
+            this.cardMouseEventsSelf.clear();
+            this.cardMouseEventsEnemy.clear();
+            //System.out.println("清理鼠标事件！");
+            this.chosenIndexOfButton = -1;
+            System.out.println("chosenIndexOfButton被初始化为：" + chosenIndexOfButton);
         }
-        if(this.label != null)
-            container.remove(label);
-        buttons.clear();
-        if (this.labelHP != null)
-            container.remove(labelHP);
     }
 
     public void setLabel(int labelX,int y) {
         JLabel label = new JLabel();
         label.setVisible(true);
-        label.setBounds(labelX, y - CONSTANT.contentSpace, 300, 30);
+        label.setForeground(Color.white);
+        label.setBounds(labelX, y - CONSTANT.contentSpace, 100, 30);
         label.setText(playerDesciption);
         this.label = label;
         container.add(label);
     }
-
+/*
     @Override
     public void paint(Graphics g) {
         super.paint(g);
+        System.out.println("执行paint");
         removeAllComponents();
         drawButtons();
-        drawINFO(g);
-    }
+        d
+*/
 
-    class CardThread extends Thread {
-        @Override
-        public void run() {
-            super.run();
-            while(true) {
-                repaint();
-                try {
-                    Thread.sleep(16);
-                } catch(InterruptedException e ) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private void drawButtons() {
+    public void drawButtons() {
 
         //System.out.println("进入函数");
         //System.out.println("清屏");
-        container.setVisible(true);
-        this.setVisible(true);
 
-        if (cardPlayerKey != null && !cardPlayerKey.getCards().isEmpty()) {
+        drawButtonSelf(cardPlayerKeySelf);
+        drawButtonEnemy(cardPlayerKeyEnemy);
+
+    }
+
+    public void drawButtonSelf(CardPlayerKey cardPlayerKey) {
+
+        if (cardPlayerKey != null && cardPlayerKey.getCards()!=null &&!cardPlayerKey.getCards().isEmpty()) {
             //System.out.println("自己还剩" + cardPlayerKey.getCards().size() + "张手牌");
+
             int x = (CONSTANT.frameWidth - cardPlayerKey.getCards().size() * CONSTANT.cardWidth) / 2;
             int labelX = x;
             int y = CONSTANT.frameHeight - CONSTANT.cardDistantFromBottom - CONSTANT.cardHeight - 50;
             setLabel(labelX,y);
+
+            //System.out.println("drawButtons1");
             for (int i = 0; i < cardPlayerKey.getCards().size(); i++) {
+                // System.out.println("drawButtons2");
                 String text = cardPlayerKey.getCards().get(i).getCardName();
+                //System.out.println("drawButtons3");
+
                 JButton button = getButton(text, x, y, CONSTANT.cardWidth, CONSTANT.cardHeight);
+                CardMouseEvent cardMouseEvent = new CardMouseEvent(i);
+                cardMouseEventsSelf.add(cardMouseEvent);
+                button.addMouseListener(cardMouseEvent);
                 container.add(button);
                 buttons.add(button);
-                //System.out.println("Button" + String.valueOf(i + 1) + "添加成功！");
+                System.out.println("Button" + i + " 的Event里的index值:" + cardMouseEvent.getIndex() + "\nchosenIndex: " + cardMouseEvent.getChosenIndex());
                 x += CONSTANT.cardWidth + 10;
             }
         }
     }
 
-    private void drawINFO(Graphics g) {
+    public void drawButtonEnemy(CardPlayerKey cardPlayerKey) {
+        if (cardPlayerKey != null && cardPlayerKey.getCards()!=null &&!cardPlayerKey.getCards().isEmpty()) {
 
-        int x = CONSTANT.frameWidth - 50;
+            int x = (CONSTANT.frameWidth - cardPlayerKey.getCards().size() * CONSTANT.cardWidth) / 2;
+            int labelX = x;
+            int y = CONSTANT.getCardDistantFromUp;
+
+            for (int i = 0; i < cardPlayerKey.getCards().size(); i++) {
+                String text = cardPlayerKey.getCards().get(i).getCardName();
+
+                JButton button = getButton(text, x, y, CONSTANT.cardWidth, CONSTANT.cardHeight);
+                CardMouseEvent cardMouseEvent = new CardMouseEvent(i);
+                cardMouseEventsEnemy.add(cardMouseEvent);
+                button.addMouseListener(cardMouseEvent);
+                container.add(button);
+                buttons.add(button);
+
+                System.out.println("Button" + i + " 的Event里的index值:" + cardMouseEvent.getIndex() + "\nchosenIndex: " + cardMouseEvent.getChosenIndex());
+                x += CONSTANT.cardWidth + 10;
+            }
+        }
+    }
+
+    public void configureIndex() {
+
+        if(cardMouseEventsSelf != null){
+            for(CardMouseEvent cardMouseEvent : cardMouseEventsSelf) {
+                if(cardMouseEvent.getChosenIndex() == cardMouseEvent.getIndex()) {
+                    System.out.println("找到了！");
+                    this.chosenIndexOfButton = cardMouseEvent.getChosenIndex();
+                    break;
+                }
+            }
+        }
+    }
+
+    public void drawInfoSelf() {
+
+        int x = CONSTANT.frameWidth - 100;
         int y = CONSTANT.frameHeight - 100;
 
-        if (cardPlayerKey != null) {
-            System.out.println("HP函数");
+        if (cardPlayerKeySelf != null) {
+            //System.out.println("HP函数");
             JLabel labelHP = new JLabel();
-            labelHP.setText("HP:" + cardPlayerKey.getPlayer().getHp());
-            labelHP.setBounds(x,y,50,100);
+            labelHP.setText("HP:" + cardPlayerKeySelf.getPlayer().getHp());
+            labelHP.setBounds(x,y,100,100);
+            labelHP.setFont(new Font("宋体",1,20));
+            labelHP.setForeground(Color.white);
             container.add(labelHP);
             this.labelHP = labelHP;
-            System.out.println(cardPlayerKey.getPlayer().getHp());
+            //System.out.println(cardPlayerKey.getPlayer().getHp());
 
         }
     }
