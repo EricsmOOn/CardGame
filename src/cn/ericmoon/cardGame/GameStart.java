@@ -48,6 +48,8 @@ public class GameStart {
 
                 f.cardPlayerKeySelf = CpKeySource.getCpk1();
                 f.cardPlayerKeyEnemy = CpKeySource.getCpk2();
+                f.buffPlayerkeySelf = BpKeySource.getBpk1();
+                f.buffPlayerKeyEnemy = BpKeySource.getBpk2();
                 f.playing = playing;
 
                 if(playing){
@@ -58,7 +60,7 @@ public class GameStart {
                 }else {
                     cpk = CpKeySource.getCpk2();
                     bpk = BpKeySource.getBpk2();
-                    f.playerDesciption = "AI出牌";
+                    f.playerDesciption = "AI正在出牌..";
                     System.out.println("轮到电脑出牌");
                 }
 
@@ -68,13 +70,10 @@ public class GameStart {
 
                 printer(cpk);
 
-                f.removeAllComponents();
-                f.drawButtons();
-                f.drawInfoSelf();
-                f.repaint();
+                f.refreshAll(); //刷新画面
 
                 System.out.println("repaint执行完毕!");
-                Helper.printLine();
+                Helper.printWait();
 
 
                 if(DeadController.preDeadController(ApKeySource.getApk1()) ||
@@ -85,6 +84,7 @@ public class GameStart {
 
                 //System.out.println("按 0 结束出牌 输入对应数字 1-5 出牌...");
                 int chosenIndex = 0;
+                int sleepTime = 0;
                 if (playing) {
                     if (f.cardPlayerKeySelf != null) {
                         while (f.chosenIndexOfButton == -1) {
@@ -93,9 +93,11 @@ public class GameStart {
                             f.configureIndex();
                         }
                         chosenIndex = f.chosenIndexOfButton;
+                        sleepTime = 700;
                     }
                 } else {
-                    chosenIndex = 0;
+                    chosenIndex = (int)(Math.random() * cpk.getCards().size());
+                    sleepTime = 1000;
                 }
 
                 System.out.println("选中了一张牌,index: " + chosenIndex);
@@ -108,6 +110,7 @@ public class GameStart {
 
                 System.out.println("您出了:"+card.toString());
 
+                Thread.sleep(sleepTime);
                 BattleController.useCard(cpk.getPlayer(),card);
                 //System.out.println("HP: " + cpk.getPlayer().getHp());
 
