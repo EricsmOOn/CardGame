@@ -76,12 +76,6 @@ public class GameStart {
                 Helper.printWait();
 
 
-                if(DeadController.preDeadController(ApKeySource.getApk1()) ||
-                        DeadController.preDeadController(ApKeySource.getApk2())) {
-                    break;
-                }
-
-
                 //System.out.println("按 0 结束出牌 输入对应数字 1-5 出牌...");
                 int chosenIndex = 0;
                 int sleepTime = 0;
@@ -113,6 +107,11 @@ public class GameStart {
                 Thread.sleep(sleepTime);
                 BattleController.useCard(cpk.getPlayer(),card);
                 //System.out.println("HP: " + cpk.getPlayer().getHp());
+
+                if(DeadController.preDeadController(ApKeySource.getApk1()) ||
+                        DeadController.preDeadController(ApKeySource.getApk2())) {
+                    break;
+                }
 
                 //卡牌清算
                 HandCardController.countCards(cpk);

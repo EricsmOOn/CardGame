@@ -29,7 +29,10 @@ public class DeadController {
                     player.setHp(1);
                     apk.deleteAfter(after);
                     return false;
-                }else return true;
+                }else {
+                    player.setHp(0);
+                    return true;
+                }
             }
         }
         return false;
