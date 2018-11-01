@@ -306,6 +306,7 @@ public class GameClient extends JFrame {
             button.addMouseListener(cardMouseEvent);
 
             if(card.getCardType() == 1) {
+                //ok
                 DamageCard damageCard = (DamageCard) card;
                 JLabel label = getDamageLabel(String.valueOf(damageCard.getDamage()));
                 button.add(label);
