@@ -3,6 +3,7 @@ package cn.ericmoon.cardGame.Draw;
 import cn.ericmoon.cardGame.CONSTANT;
 import cn.ericmoon.cardGame.Event.CardMouseEvent;
 import cn.ericmoon.cardGame.GameUtil.GameUtil;
+import cn.ericmoon.cardGame.cards.Buff;
 import cn.ericmoon.cardGame.cards.BuffCard;
 import cn.ericmoon.cardGame.cards.Card;
 import cn.ericmoon.cardGame.cards.DamageCard;
@@ -13,6 +14,7 @@ import cn.ericmoon.cardGame.keys.CardPlayerKey;
 import com.sun.tools.classfile.ConstantPool;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -47,6 +49,8 @@ public class GameClient extends JFrame {
     ArrayList<JButton> buttons = new ArrayList<>();
     ArrayList<CardMouseEvent> cardMouseEventsSelf = new ArrayList<>();
     ArrayList<CardMouseEvent> cardMouseEventsEnemy = new ArrayList<>();
+
+    private ImageIcon damageCardImage = new ImageIcon("images/damageCardImage.png");
 
     /**
      * 双缓冲
@@ -181,8 +185,11 @@ public class GameClient extends JFrame {
                     button.add(damageLabel);
                 }
 
-                cardMouseEventsSelf.add(cardMouseEvent);
+
+                button.setIcon(damageCardImage);
                 button.addMouseListener(cardMouseEvent);
+
+                cardMouseEventsSelf.add(cardMouseEvent);
                 container.add(button);
                 buttons.add(button);
                 //System.out.println("Button" + i + " 的Event里的index值:" + cardMouseEvent.getIndex() + "\nchosenIndex: " + cardMouseEvent.getChosenIndex());
@@ -208,8 +215,11 @@ public class GameClient extends JFrame {
                 card.setX(x);
                 card.setY(y);
                 CardMouseEvent cardMouseEvent = new CardMouseEvent(i,this,beingCovered);
-                cardMouseEventsEnemy.add(cardMouseEvent);
+
+                button.setIcon(damageCardImage);
                 button.addMouseListener(cardMouseEvent);
+
+                cardMouseEventsEnemy.add(cardMouseEvent);
                 container.add(button);
                 buttons.add(button);
 
@@ -222,7 +232,7 @@ public class GameClient extends JFrame {
 
     public void configureIndex() {
 
-        if(cardMouseEventsSelf != null){
+        if(cardMouseEventsSelf != null) {
             for(CardMouseEvent cardMouseEvent : cardMouseEventsSelf) {
                 if(cardMouseEvent.getChosenIndex() == cardMouseEvent.getIndex()) {
                     System.out.println("找到了！");
@@ -255,6 +265,7 @@ public class GameClient extends JFrame {
 
         jButton.add(nameLabel);
         jButton.add(desLabel);
+        jButton.setIcon(damageCardImage);
 
         return jButton;
     }
@@ -266,7 +277,7 @@ public class GameClient extends JFrame {
         JLabel label = new JLabel(text);
         label.setVisible(true);
         label.setForeground(Color.black);
-        label.setBounds(CONSTANT.cardWidth - 65,CONSTANT.cardHeight - 25,100,20);
+        label.setBounds(CONSTANT.cardWidth/2 - 25,CONSTANT.cardHeight - 50,100,20);
 
         return label;
     }
@@ -361,7 +372,7 @@ public class GameClient extends JFrame {
                 label = new JLabel("攻击卡");
                 break;
             case 2:
-                BuffCard buffCard = (BuffCard) card;
+                Buff buffCard = (Buff) card;
                 String text;
                 if(buffCard.isDebuff())
                     text = "Debuff卡";
@@ -380,7 +391,7 @@ public class GameClient extends JFrame {
 
         label.setForeground(Color.black);
         label.setVisible(true);
-        label.setBounds(5,CONSTANT.cardHeight - 25,50,20);
+        label.setBounds(CONSTANT.cardWidth/2 - 23,CONSTANT.cardHeight - 30,70,20);
 
         return label;
 
