@@ -1,6 +1,8 @@
 package cn.ericmoon.cardGame.Event;
 
 
+import cn.ericmoon.cardGame.Draw.GameClient;
+
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -9,9 +11,13 @@ public class CardMouseEvent implements MouseListener {
 
     private int index;
     private int chosenIndex = -1;
+    private boolean beingCovered = false;
+    public GameClient f;
 
-    public CardMouseEvent(int index) {
+    public CardMouseEvent(int index, GameClient f, boolean beingCovered) {
         this.index = index;
+        this.f = f;
+        this.beingCovered = beingCovered;
     }
 
     @Override
@@ -31,12 +37,18 @@ public class CardMouseEvent implements MouseListener {
 
     @Override
     public void mouseEntered(MouseEvent e) {
-
+        if(!beingCovered) {
+            System.out.println("进入卡牌Button " + index);
+            beingCovered = true;
+            f.setDesVisible();
+        }
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-
+        System.out.println("离开卡牌Button " + index);
+        f.setDesUnVisible();
+        beingCovered = false;
     }
 
     public int getIndex() {
@@ -54,4 +66,13 @@ public class CardMouseEvent implements MouseListener {
     public void setChosenIndex(int chosenIndex) {
         this.chosenIndex = chosenIndex;
     }
+
+    public boolean isBeingCovered() {
+        return beingCovered;
+    }
+
+    public void setBeingCovered(boolean beingCovered) {
+        this.beingCovered = beingCovered;
+    }
+
 }

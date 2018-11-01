@@ -20,10 +20,14 @@ import lombok.Getter;
  *
  */
 @Data
+
 public abstract class Card {
 
     public int cardType;
     public String cardName;
     public String cardDesc;
+
+    private int x,y;
+    private boolean beingCovered = false;
 
 }

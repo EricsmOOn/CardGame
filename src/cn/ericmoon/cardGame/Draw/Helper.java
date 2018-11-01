@@ -3,7 +3,11 @@ package cn.ericmoon.cardGame.Draw;
 public class Helper {
 
     public static void printLine() {
-        System.out.println("-------------------------------");
+        System.out.println("--------------------------------------------------------------------");
+    }
+
+    public static void printWait() {
+        System.out.println("等待出牌：");
     }
 
 }
