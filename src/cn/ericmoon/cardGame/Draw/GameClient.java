@@ -8,6 +8,7 @@ import cn.ericmoon.cardGame.gameRepository.AllKeySource;
 import cn.ericmoon.cardGame.gameRepository.CpKeySource;
 import cn.ericmoon.cardGame.keys.BuffPlayerKey;
 import cn.ericmoon.cardGame.keys.CardPlayerKey;
+import com.sun.tools.classfile.ConstantPool;
 
 import javax.swing.*;
 import java.awt.*;
@@ -78,6 +79,14 @@ public class GameClient extends JFrame {
         System.out.println("成功设置窗口！");
     }
 
+/*
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+        refreshAll();
+    }
+*/
+
     public void refreshAll() {
         removeAllComponents();
         drawButtons();
@@ -88,7 +97,7 @@ public class GameClient extends JFrame {
     public void removeAllComponents() {
         if(cardPlayerKeySelf != null) {
             removeAllLabels();
-            resetProperties();
+            removeAllButtons();
             System.out.println("chosenIndexOfButton被初始化为：" + chosenIndexOfButton);
         }
     }
@@ -106,7 +115,7 @@ public class GameClient extends JFrame {
             container.remove(labelLuckEnemy);
     }
 
-    private void resetProperties() {
+    private void removeAllButtons() {
         if(buttons !=null){
             for (int i = 0; i < buttons.size(); i++) {
                 JButton button = buttons.get(i);
@@ -149,13 +158,18 @@ public class GameClient extends JFrame {
             setLabel(labelX,y);
 
             for (int i = 0; i < cardPlayerKey.getCards().size(); i++) {
-                String text = cardPlayerKey.getCards().get(i).getCardName();
-                String cardDescription = cardPlayerKey.getCards().get(i).getCardDesc();
+                Card card = cardPlayerKeySelf.getCards().get(i);
 
-                JButton button = getButton(text, cardDescription, x, y, CONSTANT.cardWidth, CONSTANT.cardHeight);
-                cardPlayerKey.getCards().get(i).setX(x);
-                cardPlayerKey.getCards().get(i).setY(y);
-                CardMouseEvent cardMouseEvent = new CardMouseEvent(i);
+                String text = card.getCardName();
+                String cardDescription = card.getCardDesc();
+                boolean beingCovered = card.isBeingCovered();
+
+                CardMouseEvent cardMouseEvent = new CardMouseEvent(i,this,beingCovered);
+
+                JButton button = getButton(text,cardDescription,x,y,CONSTANT.cardWidth,CONSTANT.cardHeight);
+                card.setX(x);
+                card.setY(y);
+
                 cardMouseEventsSelf.add(cardMouseEvent);
                 button.addMouseListener(cardMouseEvent);
                 container.add(button);
@@ -173,11 +187,16 @@ public class GameClient extends JFrame {
             int y = CONSTANT.getCardDistantFromUp;
 
             for (int i = 0; i < cardPlayerKey.getCards().size(); i++) {
-                String cardName = cardPlayerKey.getCards().get(i).getCardName();
-                String cardDescription = cardPlayerKey.getCards().get(i).getCardDesc();
+                Card card = cardPlayerKeyEnemy.getCards().get(i);
 
-                JButton button = getButton(cardName, cardDescription, x, y, CONSTANT.cardWidth, CONSTANT.cardHeight);
-                CardMouseEvent cardMouseEvent = new CardMouseEvent(i);
+                String text = card.getCardName();
+                String cardDescription = card.getCardDesc();
+                boolean beingCovered = card.isBeingCovered();
+
+                JButton button = getButton(text,cardDescription,x,y,CONSTANT.cardWidth,CONSTANT.cardHeight);
+                card.setX(x);
+                card.setY(y);
+                CardMouseEvent cardMouseEvent = new CardMouseEvent(i,this,beingCovered);
                 cardMouseEventsEnemy.add(cardMouseEvent);
                 button.addMouseListener(cardMouseEvent);
                 container.add(button);
@@ -201,7 +220,7 @@ public class GameClient extends JFrame {
                     JButton button = buttons.get(index);
                     int x = card.getX();
                     int y = card.getY() - 30;
-                    updateButton(button,card.getCardName(),card.getCardDesc(),x,y,index);
+                    //updateButton(button,card.getCardName(),card.getCardDesc(),x,y,index);
                     this.chosenIndexOfButton = cardMouseEvent.getChosenIndex();
                     break;
                 }
@@ -244,18 +263,9 @@ public class GameClient extends JFrame {
         label.setForeground(Color.black);
         label.setFont(new Font("楷体", Font.PLAIN,13));
         label.setBounds(CONSTANT.textAreaSpace,25,CONSTANT.cardWidth - 2*CONSTANT.textAreaSpace,CONSTANT.textAreaHeight);
+
+        label.setVisible(false);
         return label;
-    }
-
-    private JTextArea getCardDescriptionTextArea(String description) {
-        JTextArea textArea = new JTextArea(description);
-        textArea.setForeground(Color.black);
-        textArea.setBounds(CONSTANT.textAreaSpace,80,CONSTANT.cardWidth - 2*CONSTANT.textAreaSpace,CONSTANT.textAreaHeight);
-        textArea.setColumns(5);
-        textArea.setRows(5);
-        textArea.setAlignmentX(CONSTANT.cardWidth/2);
-
-        return textArea;
     }
 
     public void setLabel(int labelX,int y) {
@@ -268,12 +278,61 @@ public class GameClient extends JFrame {
         container.add(label);
     }
 
-    public void updateButton(JButton button,String cardName,String cardDescription, int x, int y,int index) {
-        JButton button1 = getButton(cardName,cardDescription,x,y,CONSTANT.cardWidth,CONSTANT.cardHeight);
-        container.remove(button);
-        container.add(button1);
-        buttons.set(index,button1);
-        repaint();
+    public void updateButton(int index) {
+
+        if (cardPlayerKeySelf != null && cardPlayerKeySelf.getCards()!=null && !cardPlayerKeySelf.getCards().isEmpty()) {
+
+            Card card = cardPlayerKeySelf.getCards().get(index);
+            JButton button = getButton(card.getCardName(),card.getCardDesc(),card.getX(),card.getY(),CONSTANT.cardWidth,CONSTANT.cardHeight);
+            CardMouseEvent cardMouseEvent = new CardMouseEvent(index,this,card.isBeingCovered());
+            button.addMouseListener(cardMouseEvent);
+
+            cardMouseEventsSelf.set(index,cardMouseEvent);
+            JButton buttonToBeRemoved = buttons.get(index);
+            container.remove(buttonToBeRemoved);
+            buttons.set(index,button);
+            container.add(buttons.get(index));
+
+            repaint();
+        }
+    }
+
+    public void setDesVisible() {
+        if(cardMouseEventsSelf != null) {
+            for(CardMouseEvent cardMouseEvent : cardMouseEventsSelf) {
+                if(cardMouseEvent.isBeingCovered()) {
+                    int index = cardMouseEvent.getIndex();
+                    Card card = cardPlayerKeySelf.getCards().get(index);
+                    card.setX(card.getX());
+                    card.setY(card.getY() - 30);
+                    card.setBeingCovered(true);
+                    updateButton(index);
+                    JButton button = buttons.get(index);
+                    JLabel label = (JLabel) button.getComponent(1);
+                    label.setVisible(true);
+                    break;
+                }
+            }
+        }
+    }
+
+    public void setDesUnVisible() {
+        if(cardMouseEventsSelf != null){
+            for(CardMouseEvent cardMouseEvent : cardMouseEventsSelf) {
+                if(cardMouseEvent.isBeingCovered()) {
+                    int index = cardMouseEvent.getIndex();
+                    Card card = cardPlayerKeySelf.getCards().get(index);
+                    card.setX(card.getX());
+                    card.setY(card.getY() + 30);
+                    card.setBeingCovered(false);
+                    updateButton(index);
+                    JButton button = buttons.get(index);
+                    JLabel label = (JLabel) button.getComponent(1);
+                    label.setVisible(false);
+                    break;
+                }
+            }
+        }
     }
 
     public void drawLabelHP() {

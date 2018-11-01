@@ -28,5 +28,6 @@ public abstract class Card {
     public String cardDesc;
 
     private int x,y;
+    private boolean beingCovered = false;
 
 }

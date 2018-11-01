@@ -6,7 +6,7 @@ public class CONSTANT {
     public static final int frameHeight = 800;
     public static final int frameLocationx = 50;
     public static final int frmaeLocationy = 130;
-    public static final int cardDistantFromBottom = 30;
+    public static final int cardDistantFromBottom = 50;
     public static final int getCardDistantFromUp = 30;
     public static final int cardWidth = 150;
     public static final int cardHeight = 200;
