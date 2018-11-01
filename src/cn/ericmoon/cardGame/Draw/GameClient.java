@@ -3,6 +3,7 @@ package cn.ericmoon.cardGame.Draw;
 import cn.ericmoon.cardGame.CONSTANT;
 import cn.ericmoon.cardGame.Event.CardMouseEvent;
 import cn.ericmoon.cardGame.GameUtil.GameUtil;
+import cn.ericmoon.cardGame.cards.BuffCard;
 import cn.ericmoon.cardGame.cards.Card;
 import cn.ericmoon.cardGame.cards.DamageCard;
 import cn.ericmoon.cardGame.gameRepository.AllKeySource;
@@ -171,10 +172,13 @@ public class GameClient extends JFrame {
                 card.setX(x);
                 card.setY(y);
 
+                JLabel cardTypeLabel = getCardTypeLabel(i);
+                button.add(cardTypeLabel);
+
                 if(card.getCardType() == 1) {
                     DamageCard damageCard = (DamageCard) card;
-                    JLabel label = getDamageLabel(String.valueOf(damageCard.getDamage()));
-                    button.add(label);
+                    JLabel damageLabel = getDamageLabel(String.valueOf(damageCard.getDamage()));
+                    button.add(damageLabel);
                 }
 
                 cardMouseEventsSelf.add(cardMouseEvent);
@@ -256,16 +260,19 @@ public class GameClient extends JFrame {
     }
 
     private JLabel getDamageLabel(String text) {
-        text = "Damage: " + text;
+
+        text = "攻击值: " + text;
 
         JLabel label = new JLabel(text);
         label.setVisible(true);
         label.setForeground(Color.black);
-        label.setBounds(CONSTANT.cardWidth/2 - 35,CONSTANT.cardHeight - 25,100,20);
+        label.setBounds(CONSTANT.cardWidth - 65,CONSTANT.cardHeight - 25,100,20);
+
         return label;
     }
 
     private JLabel getCardNameLabel(String text) {
+
         JLabel label = new JLabel(text);
         label.setForeground(Color.black);
         label.setFont(new Font("楷体", Font.PLAIN,13));
@@ -295,6 +302,7 @@ public class GameClient extends JFrame {
         container.add(label);
     }
 
+
     public void updateButton(int index) {
 
         if (cardPlayerKeySelf != null && cardPlayerKeySelf.getCards()!=null && !cardPlayerKeySelf.getCards().isEmpty()) {
@@ -306,11 +314,14 @@ public class GameClient extends JFrame {
             button.addMouseListener(cardMouseEvent);
 
             if(card.getCardType() == 1) {
-                //ok
+
                 DamageCard damageCard = (DamageCard) card;
                 JLabel label = getDamageLabel(String.valueOf(damageCard.getDamage()));
                 button.add(label);
             }
+
+            JLabel label = getCardTypeLabel(index);
+            button.add(label);
 
             cardMouseEventsSelf.set(index,cardMouseEvent);
             JButton buttonToBeRemoved = buttons.get(index);
@@ -339,6 +350,40 @@ public class GameClient extends JFrame {
                 }
             }
         }
+    }
+
+    private JLabel getCardTypeLabel(int index) {
+
+        Card card = cardPlayerKeySelf.getCards().get(index);
+        JLabel label;
+        switch (card.getCardType()) {
+            case 1 :
+                label = new JLabel("攻击卡");
+                break;
+            case 2:
+                BuffCard buffCard = (BuffCard) card;
+                String text;
+                if(buffCard.isDebuff())
+                    text = "Debuff卡";
+                else
+                    text = "Buff卡";
+                label = new JLabel(text);
+                break;
+            case 3:
+                label = new JLabel("反制卡");
+                break;
+            default:
+                label = new JLabel("空");
+                break;
+
+        }
+
+        label.setForeground(Color.black);
+        label.setVisible(true);
+        label.setBounds(5,CONSTANT.cardHeight - 25,50,20);
+
+        return label;
+
     }
 
     public void setDesUnVisible() {
