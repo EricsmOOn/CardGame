@@ -15,6 +15,6 @@ public class CONSTANT {
     public static final int hpLabelSelfY = CONSTANT.frameHeight - 100;
     public static final int luckLabelSelfX = hpLabelSelfX;
     public static final int luckLabelSelfY = hpLabelSelfY - 50;
-    public static final int textAreaSpace = 10;
+    public static final int textAreaSpace = 20;
     public static final int textAreaHeight = 80;
 }
