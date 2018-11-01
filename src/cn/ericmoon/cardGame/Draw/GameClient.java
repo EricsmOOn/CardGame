@@ -4,6 +4,7 @@ import cn.ericmoon.cardGame.CONSTANT;
 import cn.ericmoon.cardGame.Event.CardMouseEvent;
 import cn.ericmoon.cardGame.GameUtil.GameUtil;
 import cn.ericmoon.cardGame.cards.Card;
+import cn.ericmoon.cardGame.cards.DamageCard;
 import cn.ericmoon.cardGame.gameRepository.AllKeySource;
 import cn.ericmoon.cardGame.gameRepository.CpKeySource;
 import cn.ericmoon.cardGame.keys.BuffPlayerKey;
@@ -170,6 +171,12 @@ public class GameClient extends JFrame {
                 card.setX(x);
                 card.setY(y);
 
+                if(card.getCardType() == 1) {
+                    DamageCard damageCard = (DamageCard) card;
+                    JLabel label = getDamageLabel(String.valueOf(damageCard.getDamage()));
+                    button.add(label);
+                }
+
                 cardMouseEventsSelf.add(cardMouseEvent);
                 button.addMouseListener(cardMouseEvent);
                 container.add(button);
@@ -233,7 +240,7 @@ public class GameClient extends JFrame {
      * Helper methods
      */
 
-    public JButton getButton(String name, String description, int x, int y, int width, int height) {
+    private JButton getButton(String name, String description, int x, int y, int width, int height) {
 
         JButton jButton = new JButton();
         jButton.setBounds(x,y,width,height);
@@ -246,6 +253,16 @@ public class GameClient extends JFrame {
         jButton.add(desLabel);
 
         return jButton;
+    }
+
+    private JLabel getDamageLabel(String text) {
+        text = "Damage: " + text;
+
+        JLabel label = new JLabel(text);
+        label.setVisible(true);
+        label.setForeground(Color.black);
+        label.setBounds(CONSTANT.cardWidth/2 - 35,CONSTANT.cardHeight - 25,100,20);
+        return label;
     }
 
     private JLabel getCardNameLabel(String text) {
@@ -283,9 +300,16 @@ public class GameClient extends JFrame {
         if (cardPlayerKeySelf != null && cardPlayerKeySelf.getCards()!=null && !cardPlayerKeySelf.getCards().isEmpty()) {
 
             Card card = cardPlayerKeySelf.getCards().get(index);
+
             JButton button = getButton(card.getCardName(),card.getCardDesc(),card.getX(),card.getY(),CONSTANT.cardWidth,CONSTANT.cardHeight);
             CardMouseEvent cardMouseEvent = new CardMouseEvent(index,this,card.isBeingCovered());
             button.addMouseListener(cardMouseEvent);
+
+            if(card.getCardType() == 1) {
+                DamageCard damageCard = (DamageCard) card;
+                JLabel label = getDamageLabel(String.valueOf(damageCard.getDamage()));
+                button.add(label);
+            }
 
             cardMouseEventsSelf.set(index,cardMouseEvent);
             JButton buttonToBeRemoved = buttons.get(index);
