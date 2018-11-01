@@ -28,6 +28,7 @@ public class GameClient extends JFrame {
 
     Toolkit toolkit = this.getToolkit();
     Container container = this.getContentPane();
+    JLayeredPane layeredPane = new JLayeredPane();
 
     public CardPlayerKey cardPlayerKeySelf;
     public CardPlayerKey cardPlayerKeyEnemy;
@@ -51,6 +52,9 @@ public class GameClient extends JFrame {
     ArrayList<CardMouseEvent> cardMouseEventsEnemy = new ArrayList<>();
 
     private ImageIcon damageCardImage = new ImageIcon("images/damageCardImage.png");
+    private ImageIcon buffCardImage = new ImageIcon("images/buffCardImage.png");
+    private ImageIcon afterCardImage = new ImageIcon("images/afterCardImage.png");
+    private Image backgroundImage = toolkit.getImage("images/background.png");
 
     /**
      * 双缓冲
@@ -78,10 +82,20 @@ public class GameClient extends JFrame {
         this.setSize(CONSTANT.frameWidth, CONSTANT.frameHeight);
         this.setLocation(CONSTANT.frameLocationx, CONSTANT.frmaeLocationy);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setResizable(false);
+        //this.setLayeredPane(layeredPane);
 
         this.container.setLayout(null);
-        this.setResizable(false);
         this.container.setBackground(Color.BLACK);
+        //layeredPane.add(this.container,JLayeredPane.MODAL_LAYER);
+
+        BackgroundPanel backgroundPanel = new BackgroundPanel(backgroundImage);
+        backgroundPanel.setVisible(true);
+        backgroundPanel.setLayout(null);
+        backgroundPanel.setOpaque(true);
+        backgroundPanel.setBounds(0,0,CONSTANT.frameWidth,CONSTANT.frameHeight);
+
+
         System.out.println("成功设置窗口！");
     }
 
@@ -172,7 +186,7 @@ public class GameClient extends JFrame {
 
                 CardMouseEvent cardMouseEvent = new CardMouseEvent(i,this,beingCovered);
 
-                JButton button = getButton(text,cardDescription,x,y,CONSTANT.cardWidth,CONSTANT.cardHeight);
+                JButton button = getButton(card,text,cardDescription,x,y,CONSTANT.cardWidth,CONSTANT.cardHeight);
                 card.setX(x);
                 card.setY(y);
 
@@ -185,8 +199,6 @@ public class GameClient extends JFrame {
                     button.add(damageLabel);
                 }
 
-
-                button.setIcon(damageCardImage);
                 button.addMouseListener(cardMouseEvent);
 
                 cardMouseEventsSelf.add(cardMouseEvent);
@@ -211,13 +223,13 @@ public class GameClient extends JFrame {
                 String cardDescription = card.getCardDesc();
                 boolean beingCovered = card.isBeingCovered();
 
-                JButton button = getButton(text,cardDescription,x,y,CONSTANT.cardWidth,CONSTANT.cardHeight);
+                JButton button = getButton(card,text,cardDescription,x,y,CONSTANT.cardWidth,CONSTANT.cardHeight);
                 card.setX(x);
                 card.setY(y);
                 CardMouseEvent cardMouseEvent = new CardMouseEvent(i,this,beingCovered);
 
-                button.setIcon(damageCardImage);
                 button.addMouseListener(cardMouseEvent);
+                button.getComponent(0).setVisible(false);
 
                 cardMouseEventsEnemy.add(cardMouseEvent);
                 container.add(button);
@@ -254,7 +266,10 @@ public class GameClient extends JFrame {
      * Helper methods
      */
 
-    private JButton getButton(String name, String description, int x, int y, int width, int height) {
+    private JButton getButton(Card card, String name, String description, int x, int y, int width, int height) {
+
+        int cardType = card.getCardType();
+        ImageIcon imageIcon;
 
         JButton jButton = new JButton();
         jButton.setBounds(x,y,width,height);
@@ -265,7 +280,14 @@ public class GameClient extends JFrame {
 
         jButton.add(nameLabel);
         jButton.add(desLabel);
-        jButton.setIcon(damageCardImage);
+        if(cardType == 1)
+            imageIcon = damageCardImage;
+        else if(cardType == 2)
+            imageIcon = buffCardImage;
+        else
+            imageIcon = afterCardImage;
+
+        jButton.setIcon(imageIcon);
 
         return jButton;
     }
@@ -320,7 +342,7 @@ public class GameClient extends JFrame {
 
             Card card = cardPlayerKeySelf.getCards().get(index);
 
-            JButton button = getButton(card.getCardName(),card.getCardDesc(),card.getX(),card.getY(),CONSTANT.cardWidth,CONSTANT.cardHeight);
+            JButton button = getButton(card,card.getCardName(),card.getCardDesc(),card.getX(),card.getY(),CONSTANT.cardWidth,CONSTANT.cardHeight);
             CardMouseEvent cardMouseEvent = new CardMouseEvent(index,this,card.isBeingCovered());
             button.addMouseListener(cardMouseEvent);
 
@@ -391,7 +413,7 @@ public class GameClient extends JFrame {
 
         label.setForeground(Color.black);
         label.setVisible(true);
-        label.setBounds(CONSTANT.cardWidth/2 - 23,CONSTANT.cardHeight - 30,70,20);
+        label.setBounds(CONSTANT.cardWidth/2 - 22,CONSTANT.cardHeight - 30,70,20);
 
         return label;
 
