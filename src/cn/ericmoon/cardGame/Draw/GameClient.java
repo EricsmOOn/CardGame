@@ -7,6 +7,7 @@ import cn.ericmoon.cardGame.cards.Card;
 import cn.ericmoon.cardGame.cards.DamageCard;
 import cn.ericmoon.cardGame.keys.BuffPlayerKey;
 import cn.ericmoon.cardGame.keys.CardPlayerKey;
+import cn.ericmoon.cardGame.keys.AfterPlayerKey;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,6 +25,8 @@ public class GameClient extends JFrame {
     public CardPlayerKey cardPlayerKeyEnemy;
     public BuffPlayerKey buffPlayerkeySelf;
     public BuffPlayerKey buffPlayerKeyEnemy;
+    public AfterPlayerKey afterPlayerKeySelf;
+    public AfterPlayerKey afterPlayerKeyEnemy;
 
     public String playerDesciption = "";
     public int chosenIndexOfButton = -1;
@@ -315,6 +318,12 @@ public class GameClient extends JFrame {
         return label;
     }
 
+    private JLabel getSelfBuffLabel() {
+        java.util.List<Card> cards = new ArrayList<>();
+        cards.addAll(buffPlayerkeySelf.getBuffs());
+        return new JLabel();
+    }
+
     public void setLabel(int labelX,int y) {
         JLabel label = new JLabel();
         label.setVisible(true);
@@ -331,7 +340,7 @@ public class GameClient extends JFrame {
         if (cardPlayerKeySelf != null && cardPlayerKeySelf.getCards()!=null && !cardPlayerKeySelf.getCards().isEmpty()) {
 
             Card card = cardPlayerKeySelf.getCards().get(index);
-
+/*
             JButton button = getButton(card,card.getCardName(),card.getCardDesc(),card.getX(),card.getY(),CONSTANT.cardWidth,CONSTANT.cardHeight);
             CardMouseEvent cardMouseEvent = new CardMouseEvent(index,this,card.isBeingCovered());
             button.addMouseListener(cardMouseEvent);
@@ -351,7 +360,8 @@ public class GameClient extends JFrame {
             container.remove(buttonToBeRemoved);
             buttons.set(index,button);
             container.add(buttons.get(index));
-
+*/
+            container.getComponent(index+1).setLocation(card.getX(),card.getY());
             repaint();
         }
     }
@@ -403,10 +413,20 @@ public class GameClient extends JFrame {
 
         label.setForeground(Color.black);
         label.setVisible(true);
-        label.setBounds(CONSTANT.cardWidth/2 - 22,CONSTANT.cardHeight - 30,70,20);
+        if(label.getText() == "反制卡"){
+            label.setBounds(CONSTANT.cardWidth/2 - 22,CONSTANT.cardHeight - 45,70,20);
+        }
+        else {
+            label.setBounds(CONSTANT.cardWidth / 2 - 22, CONSTANT.cardHeight - 30, 70, 20);
+        }
 
         return label;
 
+    }
+
+    private JLabel getBuffLabel() {
+        JLabel label = new JLabel();
+        return label;
     }
 
     public void setDesUnVisible() {
@@ -492,7 +512,5 @@ public class GameClient extends JFrame {
             this.labelLuckEnemy = labelLuck;
         }
     }
-
-
 
 }

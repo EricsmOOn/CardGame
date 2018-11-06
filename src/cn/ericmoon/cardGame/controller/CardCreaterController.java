@@ -69,7 +69,7 @@ public class CardCreaterController {
                 damageCard.setCardName(HOLY_ATTACK.getCardName());
                 damageCard.setCardDesc(HOLY_ATTACK.getCardDesc());
                 damageCard.setDamageType(HOLY_ATTACK.getDamageType());
-                damageCard.setDamage(HOLY_ATTACK.getDamage()*(int)luck);
+                damageCard.setDamage(HOLY_ATTACK.getDamage());
 
                 return damageCard;
 
