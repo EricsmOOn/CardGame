@@ -1,6 +1,7 @@
 package cn.ericmoon.cardGame.Draw;
 
 import cn.ericmoon.cardGame.CONSTANT;
+import cn.ericmoon.cardGame.Event.BuffStatusEvent;
 import cn.ericmoon.cardGame.Event.CardMouseEvent;
 import cn.ericmoon.cardGame.cards.Buff;
 import cn.ericmoon.cardGame.cards.Card;
@@ -36,7 +37,9 @@ public class GameClient extends JFrame {
     private JLabel labelHPEnemy;
     private JLabel labelLuckSelf;
     private JLabel labelLuckEnemy;
+    private JLabel labelBuffSelf;
     private JTextArea cardDescriptionTextArea;
+
 
     public boolean playing = false;
 
@@ -104,6 +107,7 @@ public class GameClient extends JFrame {
         removeAllComponents();
         drawButtons();
         drawInfo();
+        setSelfBuffLabel();
         repaint();
     }
 
@@ -126,6 +130,9 @@ public class GameClient extends JFrame {
             container.remove(labelLuckSelf);
         if(this.labelLuckEnemy != null)
             container.remove(labelLuckEnemy);
+        if(this.labelBuffSelf != null) {
+            container.remove(labelBuffSelf);
+        }
     }
 
     private void removeAllButtons() {
@@ -318,10 +325,27 @@ public class GameClient extends JFrame {
         return label;
     }
 
-    private JLabel getSelfBuffLabel() {
-        java.util.List<Card> cards = new ArrayList<>();
-        cards.addAll(buffPlayerkeySelf.getBuffs());
-        return new JLabel();
+    private void setSelfBuffLabel() {
+
+        java.util.List<Card> buffCardSelf = new ArrayList<>();
+        if(buffPlayerkeySelf!=null) {
+            if(buffPlayerkeySelf.getBuffs() != null)
+                buffCardSelf.addAll(buffPlayerkeySelf.getBuffs());
+            if(buffPlayerkeySelf.getDeBuffs() != null)
+                buffCardSelf.addAll(buffPlayerkeySelf.getDeBuffs());
+            if(afterPlayerKeySelf != null && afterPlayerKeySelf.getAfterCards() != null)
+            buffCardSelf.addAll(afterPlayerKeySelf.getAfterCards());
+
+
+            JLabel label = new JLabel("buffStatus");
+            label.setBounds(CONSTANT.selfBuffLabelX, CONSTANT.selfBuffLabelY, CONSTANT.selfBuffLabelWidth, CONSTANT.selfBuffLabelHeight);
+            label.setForeground(Color.white);
+            label.setVisible(true);
+            label.addMouseListener(new BuffStatusEvent());
+
+            this.labelBuffSelf = label;
+            container.add(label);
+        }
     }
 
     public void setLabel(int labelX,int y) {
@@ -364,6 +388,10 @@ public class GameClient extends JFrame {
             container.getComponent(index+1).setLocation(card.getX(),card.getY());
             repaint();
         }
+    }
+
+    public void updateBuffStatus() {
+
     }
 
     public void setDesVisible() {
