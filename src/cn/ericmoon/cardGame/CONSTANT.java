@@ -18,7 +18,7 @@ public class CONSTANT {
     public static final int textAreaSpace = 20;
     public static final int textAreaHeight = 80;
     public static final int selfBuffLabelX = luckLabelSelfX;
-    public static final int selfBuffLabelY = luckLabelSelfY - 50;
+    public static final int selfBuffLabelY = luckLabelSelfY - 100;
     public static final int selfBuffLabelWidth = 100;
     public static final int selfBuffLabelHeight = 30;
 }

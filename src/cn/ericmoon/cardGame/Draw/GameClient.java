@@ -44,6 +44,7 @@ public class GameClient extends JFrame {
     public boolean playing = false;
 
     ArrayList<JButton> buttons = new ArrayList<>();
+    ArrayList<JButton> buffButtons = new ArrayList<>();
     ArrayList<CardMouseEvent> cardMouseEventsSelf = new ArrayList<>();
     ArrayList<CardMouseEvent> cardMouseEventsEnemy = new ArrayList<>();
 
@@ -91,7 +92,7 @@ public class GameClient extends JFrame {
         backgroundPanel.setOpaque(true);
         backgroundPanel.setBounds(0,0,CONSTANT.frameWidth,CONSTANT.frameHeight);
 
-
+        //setSelfBuffLabel();
         System.out.println("成功设置窗口！");
     }
 
@@ -130,9 +131,8 @@ public class GameClient extends JFrame {
             container.remove(labelLuckSelf);
         if(this.labelLuckEnemy != null)
             container.remove(labelLuckEnemy);
-        if(this.labelBuffSelf != null) {
+        if(this.labelBuffSelf != null)
             container.remove(labelBuffSelf);
-        }
     }
 
     private void removeAllButtons() {
@@ -143,6 +143,7 @@ public class GameClient extends JFrame {
             }
             buttons.clear();
         }
+
 
         this.cardMouseEventsSelf.clear();
         this.cardMouseEventsEnemy.clear();
@@ -172,7 +173,7 @@ public class GameClient extends JFrame {
             //System.out.println("自己还剩" + cardPlayerKey.getCards().size() + "张手牌");
 
             int x = (CONSTANT.frameWidth - cardPlayerKey.getCards().size() * CONSTANT.cardWidth) / 2;
-            int y = CONSTANT.frameHeight - CONSTANT.cardDistantFromBottom - CONSTANT.cardHeight - 50;
+            int y = CONSTANT.frameHeight - CONSTANT.cardDistantFromBottom - CONSTANT.cardHeight;
             int labelX = CONSTANT.frameWidth/2 - 30;
 
             setLabel(labelX,y);
@@ -327,25 +328,14 @@ public class GameClient extends JFrame {
 
     private void setSelfBuffLabel() {
 
-        java.util.List<Card> buffCardSelf = new ArrayList<>();
-        if(buffPlayerkeySelf!=null) {
-            if(buffPlayerkeySelf.getBuffs() != null)
-                buffCardSelf.addAll(buffPlayerkeySelf.getBuffs());
-            if(buffPlayerkeySelf.getDeBuffs() != null)
-                buffCardSelf.addAll(buffPlayerkeySelf.getDeBuffs());
-            if(afterPlayerKeySelf != null && afterPlayerKeySelf.getAfterCards() != null)
-            buffCardSelf.addAll(afterPlayerKeySelf.getAfterCards());
-
-
             JLabel label = new JLabel("buffStatus");
             label.setBounds(CONSTANT.selfBuffLabelX, CONSTANT.selfBuffLabelY, CONSTANT.selfBuffLabelWidth, CONSTANT.selfBuffLabelHeight);
             label.setForeground(Color.white);
             label.setVisible(true);
-            label.addMouseListener(new BuffStatusEvent());
+            label.addMouseListener(new BuffStatusEvent(this));
 
             this.labelBuffSelf = label;
             container.add(label);
-        }
     }
 
     public void setLabel(int labelX,int y) {
@@ -364,7 +354,7 @@ public class GameClient extends JFrame {
         if (cardPlayerKeySelf != null && cardPlayerKeySelf.getCards()!=null && !cardPlayerKeySelf.getCards().isEmpty()) {
 
             Card card = cardPlayerKeySelf.getCards().get(index);
-/*
+
             JButton button = getButton(card,card.getCardName(),card.getCardDesc(),card.getX(),card.getY(),CONSTANT.cardWidth,CONSTANT.cardHeight);
             CardMouseEvent cardMouseEvent = new CardMouseEvent(index,this,card.isBeingCovered());
             button.addMouseListener(cardMouseEvent);
@@ -384,14 +374,54 @@ public class GameClient extends JFrame {
             container.remove(buttonToBeRemoved);
             buttons.set(index,button);
             container.add(buttons.get(index));
-*/
-            container.getComponent(index+1).setLocation(card.getX(),card.getY());
+
+            //container.getComponent(index+1).setLocation(card.getX(),card.getY());
             repaint();
         }
     }
 
-    public void updateBuffStatus() {
+    public void setBuffStatusVisible() {
+        java.util.List<Card> cards = new ArrayList<>();
+        if(buffPlayerkeySelf != null) {
+            if(buffPlayerkeySelf.getBuffs() != null)
+                cards.addAll(buffPlayerkeySelf.getBuffs());
+            if(buffPlayerkeySelf.getDeBuffs() != null)
+                cards.addAll(buffPlayerkeySelf.getDeBuffs());
+        }
+        if(afterPlayerKeySelf != null) {
+            if(afterPlayerKeySelf.getAfterCards() != null) {
+                cards.addAll(afterPlayerKeySelf.getAfterCards());
+            }
+        }
 
+        System.out.println("buffcards number: " + cards.size());
+
+        int x = CONSTANT.frameWidth - cards.size()*(CONSTANT.cardWidth+15);
+        int y = CONSTANT.selfBuffLabelY - CONSTANT.cardHeight - 20;
+
+        for(int i=0;i<cards.size();i++) {
+            Card card = cards.get(i);
+            JButton button = new JButton(card.getCardDesc());
+            button.setVisible(true);
+            button.setForeground(Color.black);
+            button.setBounds(x,y,CONSTANT.cardWidth,CONSTANT.cardHeight);
+            container.add(button);
+            buffButtons.add(button);
+            x += CONSTANT.cardWidth + 15;
+        }
+
+        repaint();
+    }
+
+    public void setBuffStatusUnvisible() {
+        if(buffButtons != null) {
+            for(int i=0;i<buffButtons.size();i++) {
+                JButton button = buffButtons.get(i);
+                container.remove(button);
+            }
+            buffButtons.clear();
+        }
+        repaint();
     }
 
     public void setDesVisible() {
@@ -452,10 +482,6 @@ public class GameClient extends JFrame {
 
     }
 
-    private JLabel getBuffLabel() {
-        JLabel label = new JLabel();
-        return label;
-    }
 
     public void setDesUnVisible() {
         if(cardMouseEventsSelf != null){
