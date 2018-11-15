@@ -86,12 +86,6 @@ public class GameClient extends JFrame {
         this.container.setBackground(Color.BLACK);
         //layeredPane.add(this.container,JLayeredPane.MODAL_LAYER);
 
-        BackgroundPanel backgroundPanel = new BackgroundPanel(backgroundImage);
-        backgroundPanel.setVisible(true);
-        backgroundPanel.setLayout(null);
-        backgroundPanel.setOpaque(true);
-        backgroundPanel.setBounds(0,0,CONSTANT.frameWidth,CONSTANT.frameHeight);
-
         //setSelfBuffLabel();
         System.out.println("成功设置窗口！");
     }
