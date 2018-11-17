@@ -32,12 +32,6 @@ public class UseDeBuffCard {
         //转型
         DeBuffCard deBuffCard = (DeBuffCard) keyBag.getCard();
 
-        double number = deBuffCard.getBuffNumber();
-
-        number = Math.pow(0.9,number);
-
-        Player player = keyBag.getBpken().getPlayer();
-
-        player.setLuckNum(player.getLuckNum() * number);
+        keyBag.getBpken().addDeBuff(deBuffCard);
     }
 }

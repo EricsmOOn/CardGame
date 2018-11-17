@@ -2,6 +2,7 @@ package cn.ericmoon.cardGame.controller;
 
 import cn.ericmoon.cardGame.cards.AfterCard;
 import cn.ericmoon.cardGame.cards.BuffCard;
+import cn.ericmoon.cardGame.keys.BuffPlayerKey;
 import cn.ericmoon.cardGame.keys.KeyBag;
 import cn.ericmoon.cardGame.player.Player;
 
@@ -34,13 +35,7 @@ public class UseBuffCard {
     public static void luckUpBuff(KeyBag keyBag) {
         //转型
         BuffCard buffCard = (BuffCard) keyBag.getCard();
-
-        double number = buffCard.getBuffNumber();
-
-        number = Math.pow(1.1,number);
-
-        Player player = keyBag.getBpkme().getPlayer();
-
-        player.setLuckNum(player.getLuckNum() * number);
+        //在摸牌前判断最终Luck值 并删除
+        keyBag.getBpkme().addBuff(buffCard);
     }
 }

@@ -16,7 +16,6 @@ import lombok.Data;
  */
 @Data
 public class AfterCard extends Card{
-
     private int afterType;
-
+    private String statusDesc;
 }

@@ -1,9 +1,8 @@
-package cn.ericmoon.cardGame.Event;
+package cn.ericmoon.cardGame.event;
 
 
-import cn.ericmoon.cardGame.Draw.GameClient;
+import cn.ericmoon.cardGame.draw.GameClient;
 
-import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 

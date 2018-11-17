@@ -1,22 +1,23 @@
 package cn.ericmoon.cardGame;
 
-import cn.ericmoon.cardGame.Draw.GameClient;
-import cn.ericmoon.cardGame.Draw.Helper;
+import cn.ericmoon.cardGame.draw.GameClient;
+import cn.ericmoon.cardGame.draw.Helper;
 import cn.ericmoon.cardGame.controller.BattleController;
 import cn.ericmoon.cardGame.controller.DeadController;
 import cn.ericmoon.cardGame.gameRepository.ApKeySource;
 import cn.ericmoon.cardGame.gameRepository.BpKeySource;
+import cn.ericmoon.cardGame.keys.AfterPlayerKey;
 import cn.ericmoon.cardGame.keys.BuffPlayerKey;
 import cn.ericmoon.cardGame.keys.CardPlayerKey;
 import cn.ericmoon.cardGame.player.Player;
 import cn.ericmoon.cardGame.cards.Card;
-import cn.ericmoon.cardGame.controller.HandCardController;
+import cn.ericmoon.cardGame.controller.RoundController;
 import cn.ericmoon.cardGame.gameRepository.CpKeySource;
 import cn.ericmoon.cardGame.keys.AllKeyInit;
 
 import java.util.Scanner;
 
-import static cn.ericmoon.cardGame.Enum.PlayerEnum.*;
+import static cn.ericmoon.cardGame.enumClass.PlayerEnum.*;
 
 /**
  * @ProjectName: CardGame
@@ -38,6 +39,7 @@ public class GameStart {
 
 
             boolean playing = true;
+            AfterPlayerKey apk;
             CardPlayerKey cpk;
             BuffPlayerKey bpk;
             int input;
@@ -53,11 +55,13 @@ public class GameStart {
                 f.playing = playing;
 
                 if(playing){
+                    apk = ApKeySource.getApk2();//注意 ！！！ 逆清算
                     cpk = CpKeySource.getCpk1();
                     bpk = BpKeySource.getBpk1();
                     f.playerDesciption = "己方玩家出牌";
                     System.out.println("轮到玩家出牌");
                 }else {
+                    apk = ApKeySource.getApk1();//注意 ！！！ 逆清算
                     cpk = CpKeySource.getCpk2();
                     bpk = BpKeySource.getBpk2();
                     f.playerDesciption = "AI正在出牌..";
@@ -66,7 +70,7 @@ public class GameStart {
 
 
                 //抓牌
-                HandCardController.getCards(cpk,bpk);
+                RoundController.getCards(cpk, bpk);
 
                 printer(cpk);
 
@@ -113,8 +117,9 @@ public class GameStart {
                     break;
                 }
 
-                //卡牌清算
-                HandCardController.countCards(cpk);
+                //回合清算
+                RoundController.countCards(cpk);
+                RoundController.countAfters(apk);
 
                 playing = !playing;
 
@@ -177,7 +182,7 @@ public class GameStart {
         System.out.println("当前玩家手牌:");
         for (Card card:cpk.getCards()) {
             System.out.println(">>>>"+card.getCardName()+"<<<<"+":"+'\n'+"伤害数值"+card.toString());
-            System.out.println(card.getCardDesc());
+            System.out.println("card.getCardDesc()" + card.getCardDesc());
             System.out.println();
         }
 

@@ -4,6 +4,7 @@ import cn.ericmoon.cardGame.cards.*;
 import cn.ericmoon.cardGame.keys.KeyBag;
 import cn.ericmoon.cardGame.player.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,49 +23,13 @@ public class UseDamageCard {
         int damage = damageCard.getDamage();
 
 
-
-        boolean havingDebuff = false;
         boolean havingBuff = false;
-        BuffCard bc = null;
         DeBuffCard dbc = null;
 
+        damage = buffCount(keyBag, damage);
 
-        //BuffCard加成
-        List<BuffCard> buffs = keyBag.getBpkme().getBuffs();
-        if(!buffs.isEmpty()){
-            for (BuffCard buff : buffs) {
-                if (buff.getBuffType() == 1) {
-                    damage += buff.getBuffNumber();
-                    havingBuff = true;
-                    bc = buff;
-                    break;
-                }
-            }
-            if(havingBuff){
-                buffs.remove(bc);
-            }
-        }
+        damage = deBuffCount(keyBag, damage);
 
-
-        //DeBuff虚弱效果
-        List<DeBuffCard> deBuffs = keyBag.getBpkme().getDeBuffs();
-        if(!deBuffs.isEmpty()){
-            for(DeBuffCard deBuff : deBuffs){
-                if(deBuff.getBuffType() == 1){
-                    damage -= deBuff.getBuffNumber();
-                    if(damage < 0){
-                        damage = 0;
-                    }
-                    havingDebuff = true;
-                    dbc = deBuff;
-                }
-            }
-            if(havingDebuff){
-                deBuffs.remove(dbc);
-            }
-        }
-
-        //反制卡牌清算
         afterCount(keyBag,damage);
     }
 
@@ -75,24 +40,7 @@ public class UseDamageCard {
         //初始攻击力
         int damage = damageCard.getDamage();
 
-        boolean havingBuff = false;
-        BuffCard bc = null;
-
-        //BuffCard加成
-        List<BuffCard> buffs = keyBag.getBpkme().getBuffs();
-        if(!buffs.isEmpty()){
-            for (BuffCard buff : buffs) {
-                if (buff.getBuffType() == 1) {
-                    damage += buff.getBuffNumber();
-                    havingBuff = true;
-                    bc = buff;
-                    break;
-                }
-            }
-            if(havingBuff){
-                buffs.remove(bc);
-            }
-        }
+        damage = buffCount(keyBag, damage);
 
         //反制卡牌清算
         afterCount(keyBag,damage);
@@ -164,5 +112,50 @@ public class UseDamageCard {
             if(toBeDeleted != null)
                 afterCards.remove(toBeDeleted);
         }
+    }
+
+    public static int buffCount(KeyBag keyBag, int damage) {
+        //Buff卡牌清算
+        List<BuffCard> deleteCards = new ArrayList<>();
+
+        //BuffCard加成
+        List<BuffCard> buffs = keyBag.getBpkme().getBuffs();
+        if (!buffs.isEmpty()) {
+            for (BuffCard buff : buffs) {
+                if (buff.getBuffType() == 1) {
+                    damage += buff.getBuffNumber();
+                    deleteCards.add(buff);
+                }
+            }
+            if (!deleteCards.isEmpty()) {
+                for (BuffCard b : deleteCards)
+                    buffs.remove(b);
+            }
+        }
+        return damage;
+    }
+
+    public static int deBuffCount(KeyBag keyBag, int damage) {
+        //DeBuff卡牌清算
+        List<DeBuffCard> deleteCards = new ArrayList<>();
+
+        //DeBuffCard虚弱
+        List<DeBuffCard> deBuffs = keyBag.getBpkme().getDeBuffs();
+        if (!deBuffs.isEmpty()) {
+            for (DeBuffCard deBuff : deBuffs) {
+                if (deBuff.getBuffType() == 1) {
+                    damage -= deBuff.getBuffNumber();
+                    if (damage < 0) {
+                        damage = 0;
+                    }
+                    deleteCards.add(deBuff);
+                }
+            }
+            if (!deleteCards.isEmpty()) {
+                for (DeBuffCard d : deleteCards)
+                    deBuffs.remove(d);
+            }
+        }
+        return damage;
     }
 }

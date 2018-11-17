@@ -1,4 +1,4 @@
-package cn.ericmoon.cardGame.GameUtil;
+package cn.ericmoon.cardGame.gameUtil;
 
 
 import javax.imageio.ImageIO;

@@ -4,10 +4,10 @@ import cn.ericmoon.cardGame.cards.*;
 import cn.ericmoon.cardGame.tools.RandomNumTools;
 
 
-import static cn.ericmoon.cardGame.Enum.AfterEnum.*;
-import static cn.ericmoon.cardGame.Enum.BuffEnum.*;
-import static cn.ericmoon.cardGame.Enum.DamageEnum.*;
-import static cn.ericmoon.cardGame.Enum.DeBuffEnum.*;
+import static cn.ericmoon.cardGame.enumClass.AfterEnum.*;
+import static cn.ericmoon.cardGame.enumClass.BuffEnum.*;
+import static cn.ericmoon.cardGame.enumClass.DamageEnum.*;
+import static cn.ericmoon.cardGame.enumClass.DeBuffEnum.*;
 
 /**
  * @ProjectName: CardGame
@@ -29,7 +29,7 @@ public class CardCreaterController {
             case 1:
                 return damageCardCreater(luck);
             case 2:
-                if(Math.random() > 0.4)
+                if (Math.random() > 0.6)
                 return deBuffCardCreater(luck);
                 else
                     return buffCardCreater(luck);
@@ -50,7 +50,7 @@ public class CardCreaterController {
                 damageCard.setCardName(COMMON_ATTACK.getCardName());
                 damageCard.setCardDesc(COMMON_ATTACK.getCardDesc());
                 damageCard.setDamageType(COMMON_ATTACK.getDamageType());
-                damageCard.setDamage(COMMON_ATTACK.getDamage()*(int)(6*luck));
+                damageCard.setDamage(COMMON_ATTACK.getDamage() * (int) (10 * luck));
 
                 return damageCard;
 
@@ -59,7 +59,7 @@ public class CardCreaterController {
                 damageCard.setCardName(FULL_ATTACK.getCardName());
                 damageCard.setCardDesc(FULL_ATTACK.getCardDesc());
                 damageCard.setDamageType(FULL_ATTACK.getDamageType());
-                damageCard.setDamage(FULL_ATTACK.getDamage()*(int)(4*luck));
+                damageCard.setDamage(FULL_ATTACK.getDamage() * (int) (6 * luck));
 
                 return damageCard;
 
@@ -89,6 +89,7 @@ public class CardCreaterController {
                 buffCard.setCardDesc(ATTACK_BUFF.getCardDesc());
                 buffCard.setBuffNumber(ATTACK_BUFF.getBuffNumber());
                 buffCard.setBuffType(ATTACK_BUFF.getBuffType());
+                buffCard.setStatusDesc(ATTACK_BUFF.getStatusDesc());
 
                 return buffCard;
 
@@ -98,6 +99,7 @@ public class CardCreaterController {
                 buffCard.setCardDesc(CARD_BUFF.getCardDesc());
                 buffCard.setBuffNumber(CARD_BUFF.getBuffNumber());
                 buffCard.setBuffType(CARD_BUFF.getBuffType());
+                buffCard.setStatusDesc(CARD_BUFF.getStatusDesc());
 
                 return buffCard;
 
@@ -108,6 +110,7 @@ public class CardCreaterController {
                 buffCard.setCardDesc(LUCK_BUFF.getCardDesc());
                 buffCard.setBuffNumber(LUCK_BUFF.getBuffNumber());
                 buffCard.setBuffType(LUCK_BUFF.getBuffType());
+                buffCard.setStatusDesc(LUCK_BUFF.getStatusDesc());
 
                 return buffCard;
 
@@ -127,6 +130,7 @@ public class CardCreaterController {
                 deBuffCard.setCardDesc(ATTACK_DEBUFF.getCardDesc());
                 deBuffCard.setBuffNumber(ATTACK_DEBUFF.getDeBuffNumber());
                 deBuffCard.setBuffType(ATTACK_DEBUFF.getDeBuffType());
+                deBuffCard.setStatusDesc(ATTACK_DEBUFF.getStatusDesc());
 
                 return deBuffCard;
 
@@ -136,6 +140,7 @@ public class CardCreaterController {
                 deBuffCard.setCardDesc(CARD_DEBUFF.getCardDesc());
                 deBuffCard.setBuffNumber(CARD_DEBUFF.getDeBuffNumber());
                 deBuffCard.setBuffType(CARD_DEBUFF.getDeBuffType());
+                deBuffCard.setStatusDesc(CARD_DEBUFF.getStatusDesc());
 
                 return deBuffCard;
 
@@ -146,6 +151,7 @@ public class CardCreaterController {
                 deBuffCard.setCardDesc(LUCK_DEBUFF.getCardDesc());
                 deBuffCard.setBuffNumber(LUCK_DEBUFF.getDeBuffNumber());
                 deBuffCard.setBuffType(LUCK_DEBUFF.getDeBuffType());
+                deBuffCard.setStatusDesc(LUCK_BUFF.getStatusDesc());
 
                 return deBuffCard;
 
@@ -163,6 +169,7 @@ public class CardCreaterController {
                 afterCard.setCardName(AFTER_ATTACK.getCardName());
                 afterCard.setCardDesc(AFTER_ATTACK.getCardDesc());
                 afterCard.setAfterType(AFTER_ATTACK.getAfterType());
+                afterCard.setStatusDesc(AFTER_ATTACK.getStatusDesc());
 
                 return afterCard;
 
@@ -171,6 +178,7 @@ public class CardCreaterController {
                 afterCard.setCardName(AFTER_BUFF.getCardName());
                 afterCard.setCardDesc(AFTER_BUFF.getCardDesc());
                 afterCard.setAfterType(AFTER_BUFF.getAfterType());
+                afterCard.setStatusDesc(AFTER_BUFF.getStatusDesc());
 
                 return afterCard;
 
@@ -179,6 +187,7 @@ public class CardCreaterController {
                 afterCard.setCardName(AFTER_DEAD.getCardName());
                 afterCard.setCardDesc(AFTER_DEAD.getCardDesc());
                 afterCard.setAfterType(AFTER_DEAD.getAfterType());
+                afterCard.setStatusDesc(AFTER_DEAD.getStatusDesc());
 
                 return afterCard;
             default:throw new Exception("反制卡牌生成逻辑错误");
