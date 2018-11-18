@@ -1,4 +1,4 @@
-package cn.ericmoon.cardGame.Enum;
+package cn.ericmoon.cardGame.enumClass;
 
 import lombok.Getter;
 

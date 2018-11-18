@@ -1,4 +1,4 @@
-package cn.ericmoon.cardGame.Draw;
+package cn.ericmoon.cardGame.draw;
 
 public class Helper {
 

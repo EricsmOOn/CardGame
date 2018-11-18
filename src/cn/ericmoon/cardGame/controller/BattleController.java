@@ -1,5 +1,6 @@
 package cn.ericmoon.cardGame.controller;
 
+import cn.ericmoon.cardGame.keys.AfterPlayerKey;
 import cn.ericmoon.cardGame.player.Player;
 import cn.ericmoon.cardGame.cards.*;
 import cn.ericmoon.cardGame.gameRepository.ApKeySource;
@@ -140,7 +141,15 @@ public class BattleController {
     public static void useAfterCardCore(KeyBag keyBag){
         //强制类型转换  记得删除
         AfterCard afterCard = (AfterCard) keyBag.getCard();
-        keyBag.getApkme().addAfter(afterCard);
+        AfterPlayerKey apkme = keyBag.getApkme();
+
+        boolean isHaving = false;
+        for (AfterCard a : apkme.getAfterCards()) {
+            if (a.getAfterType() == 3)
+                isHaving = true;
+        }
+        if (!isHaving)
+            apkme.addAfter(afterCard);
     }
 
 

@@ -20,4 +20,5 @@ import lombok.Data;
 public abstract class Buff extends Card {
     private int buffType;
     private boolean isDebuff;
+    private String statusDesc;
 }

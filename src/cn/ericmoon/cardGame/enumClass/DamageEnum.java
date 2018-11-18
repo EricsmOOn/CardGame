@@ -1,4 +1,4 @@
-package cn.ericmoon.cardGame.Enum;
+package cn.ericmoon.cardGame.enumClass;
 
 import lombok.Getter;
 
@@ -14,7 +14,7 @@ public enum DamageEnum {
 
     COMMON_ATTACK(1,"试探","对目标进行一次普通攻击",1,1),
     FULL_ATTACK(1,"突破","对目标进行全力攻击,无视DeBuff削弱效果",2,2),
-    HOLY_ATTACK(1,"惩戒","对目标惩戒，减少目标的幸运值",3,1);
+    HOLY_ATTACK(1, "惩戒", "对目标发起惩戒，减少目标的幸运值", 3, 1);
 
     private int cardType;
     private String cardName;

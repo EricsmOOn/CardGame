@@ -1,8 +1,8 @@
-package cn.ericmoon.cardGame.Draw;
+package cn.ericmoon.cardGame.draw;
 
 import cn.ericmoon.cardGame.CONSTANT;
-import cn.ericmoon.cardGame.Event.BuffStatusEvent;
-import cn.ericmoon.cardGame.Event.CardMouseEvent;
+import cn.ericmoon.cardGame.event.BuffStatusEvent;
+import cn.ericmoon.cardGame.event.CardMouseEvent;
 import cn.ericmoon.cardGame.cards.Buff;
 import cn.ericmoon.cardGame.cards.Card;
 import cn.ericmoon.cardGame.cards.DamageCard;
@@ -181,7 +181,7 @@ public class GameClient extends JFrame {
 
                 CardMouseEvent cardMouseEvent = new CardMouseEvent(i,this,beingCovered);
 
-                JButton button = getButton(card,text,cardDescription,x,y,CONSTANT.cardWidth,CONSTANT.cardHeight);
+                JButton button = getButton(true, card, text, cardDescription, x, y, CONSTANT.cardWidth, CONSTANT.cardHeight);
                 card.setX(x);
                 card.setY(y);
 
@@ -218,7 +218,7 @@ public class GameClient extends JFrame {
                 String cardDescription = card.getCardDesc();
                 boolean beingCovered = card.isBeingCovered();
 
-                JButton button = getButton(card,text,cardDescription,x,y,CONSTANT.cardWidth,CONSTANT.cardHeight);
+                JButton button = getButton(false, card, text, cardDescription, x, y, CONSTANT.cardWidth, CONSTANT.cardHeight);
                 card.setX(x);
                 card.setY(y);
                 CardMouseEvent cardMouseEvent = new CardMouseEvent(i,this,beingCovered);
@@ -261,7 +261,8 @@ public class GameClient extends JFrame {
      * Helper methods
      */
 
-    private JButton getButton(Card card, String name, String description, int x, int y, int width, int height) {
+    private JButton getButton(boolean isShowType, Card card, String name, String description, int x, int y, int width,
+                              int height) {
 
         int cardType = card.getCardType();
         ImageIcon imageIcon;
@@ -282,7 +283,8 @@ public class GameClient extends JFrame {
         else
             imageIcon = afterCardImage;
 
-        jButton.setIcon(imageIcon);
+        if (isShowType)
+            jButton.setIcon(imageIcon);
 
         return jButton;
     }
@@ -349,7 +351,8 @@ public class GameClient extends JFrame {
 
             Card card = cardPlayerKeySelf.getCards().get(index);
 
-            JButton button = getButton(card,card.getCardName(),card.getCardDesc(),card.getX(),card.getY(),CONSTANT.cardWidth,CONSTANT.cardHeight);
+            JButton button = getButton(true, card, card.getCardName(), card.getCardDesc(), card.getX(), card.getY(),
+                    CONSTANT.cardWidth, CONSTANT.cardHeight);
             CardMouseEvent cardMouseEvent = new CardMouseEvent(index,this,card.isBeingCovered());
             button.addMouseListener(cardMouseEvent);
 
@@ -375,27 +378,28 @@ public class GameClient extends JFrame {
     }
 
     public void setBuffStatusVisible() {
-        java.util.List<Card> cards = new ArrayList<>();
+        java.util.List<Buff> cards = new ArrayList<>();
         if(buffPlayerkeySelf != null) {
             if(buffPlayerkeySelf.getBuffs() != null)
                 cards.addAll(buffPlayerkeySelf.getBuffs());
             if(buffPlayerkeySelf.getDeBuffs() != null)
                 cards.addAll(buffPlayerkeySelf.getDeBuffs());
         }
-        if(afterPlayerKeySelf != null) {
-            if(afterPlayerKeySelf.getAfterCards() != null) {
-                cards.addAll(afterPlayerKeySelf.getAfterCards());
-            }
-        }
+//        if(afterPlayerKeySelf != null) {
+//            if(afterPlayerKeySelf.getAfterCards() != null) {
+//                cards.addAll(afterPlayerKeySelf.getAfterCards());
+//            }
+//        }
 
         System.out.println("buffcards number: " + cards.size());
 
         int x = CONSTANT.frameWidth - cards.size()*(CONSTANT.cardWidth+15);
         int y = CONSTANT.selfBuffLabelY - CONSTANT.cardHeight - 20;
 
-        for(int i=0;i<cards.size();i++) {
-            Card card = cards.get(i);
-            JButton button = new JButton(card.getCardDesc());
+        for (Buff b : cards) {
+            //TOdo
+            System.out.println(b.getStatusDesc());
+            JButton button = new JButton(b.getStatusDesc());
             button.setVisible(true);
             button.setForeground(Color.black);
             button.setBounds(x,y,CONSTANT.cardWidth,CONSTANT.cardHeight);
