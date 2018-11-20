@@ -1,6 +1,8 @@
 package cn.ericmoon.cardGame.draw;
 
 import cn.ericmoon.cardGame.CONSTANT;
+import cn.ericmoon.cardGame.cards.AfterCard;
+import cn.ericmoon.cardGame.event.AfterStatusEvent;
 import cn.ericmoon.cardGame.event.BuffStatusEvent;
 import cn.ericmoon.cardGame.event.CardMouseEvent;
 import cn.ericmoon.cardGame.cards.Buff;
@@ -38,20 +40,21 @@ public class GameClient extends JFrame {
     private JLabel labelLuckSelf;
     private JLabel labelLuckEnemy;
     private JLabel labelBuffSelf;
+    private JLabel labelAfterSelf;
     private JTextArea cardDescriptionTextArea;
 
 
     public boolean playing = false;
 
     ArrayList<JButton> buttons = new ArrayList<>();
-    ArrayList<JButton> buffButtons = new ArrayList<>();
+    ArrayList<JLabel> buffLabels = new ArrayList<>();
     ArrayList<CardMouseEvent> cardMouseEventsSelf = new ArrayList<>();
     ArrayList<CardMouseEvent> cardMouseEventsEnemy = new ArrayList<>();
 
     private ImageIcon damageCardImage = new ImageIcon("images/damageCardImage.png");
     private ImageIcon buffCardImage = new ImageIcon("images/buffCardImage.png");
     private ImageIcon afterCardImage = new ImageIcon("images/afterCardImage.png");
-    private Image backgroundImage = toolkit.getImage("images/background.png");
+    private ImageIcon buffStatusImage = new ImageIcon("images/buff.png");
 
     /**
      * 双缓冲
@@ -102,7 +105,6 @@ public class GameClient extends JFrame {
         removeAllComponents();
         drawButtons();
         drawInfo();
-        setSelfBuffLabel();
         repaint();
     }
 
@@ -127,6 +129,8 @@ public class GameClient extends JFrame {
             container.remove(labelLuckEnemy);
         if(this.labelBuffSelf != null)
             container.remove(labelBuffSelf);
+        if(this.labelAfterSelf != null)
+            container.remove(labelAfterSelf);
     }
 
     private void removeAllButtons() {
@@ -167,10 +171,11 @@ public class GameClient extends JFrame {
             //System.out.println("自己还剩" + cardPlayerKey.getCards().size() + "张手牌");
 
             int x = (CONSTANT.frameWidth - cardPlayerKey.getCards().size() * CONSTANT.cardWidth) / 2;
-            int y = CONSTANT.frameHeight - CONSTANT.cardDistantFromBottom - CONSTANT.cardHeight;
+            int y = CONSTANT.selfCardY;
             int labelX = CONSTANT.frameWidth/2 - 30;
 
-            setLabel(labelX,y);
+            setSelfBuffLabel();
+            setSelfAfterLabel();
 
             for (int i = 0; i < cardPlayerKey.getCards().size(); i++) {
                 Card card = cardPlayerKeySelf.getCards().get(i);
@@ -324,9 +329,10 @@ public class GameClient extends JFrame {
 
     private void setSelfBuffLabel() {
 
-            JLabel label = new JLabel("buffStatus");
+            JLabel label = new JLabel();
             label.setBounds(CONSTANT.selfBuffLabelX, CONSTANT.selfBuffLabelY, CONSTANT.selfBuffLabelWidth, CONSTANT.selfBuffLabelHeight);
             label.setForeground(Color.white);
+            label.setIcon(buffStatusImage);
             label.setVisible(true);
             label.addMouseListener(new BuffStatusEvent(this));
 
@@ -334,16 +340,17 @@ public class GameClient extends JFrame {
             container.add(label);
     }
 
-    public void setLabel(int labelX,int y) {
-        JLabel label = new JLabel();
-        label.setVisible(true);
+    private void setSelfAfterLabel() {
+
+        JLabel label = new JLabel("After");
+        label.setBounds(CONSTANT.selfAfterLabelX, CONSTANT.selfAfterLabelY, CONSTANT.selfBuffLabelWidth, CONSTANT.selfBuffLabelHeight);
         label.setForeground(Color.white);
-        label.setBounds(labelX, y - CONSTANT.contentSpace, 100, 30);
-        label.setText(playerDesciption);
-        this.labelStatus = label;
+        label.setVisible(true);
+        label.addMouseListener(new AfterStatusEvent(this));
+
+        this.labelBuffSelf = label;
         container.add(label);
     }
-
 
     public void updateButton(int index) {
 
@@ -393,33 +400,46 @@ public class GameClient extends JFrame {
 
         System.out.println("buffcards number: " + cards.size());
 
-        int x = CONSTANT.frameWidth - cards.size()*(CONSTANT.cardWidth+15);
-        int y = CONSTANT.selfBuffLabelY - CONSTANT.cardHeight - 20;
+        int y = CONSTANT.selfBuffLabelY - 30;
 
         for (Buff b : cards) {
             //TOdo
             System.out.println(b.getStatusDesc());
-            JButton button = new JButton(b.getStatusDesc());
-            button.setVisible(true);
-            button.setForeground(Color.black);
-            button.setBounds(x,y,CONSTANT.cardWidth,CONSTANT.cardHeight);
-            container.add(button);
-            buffButtons.add(button);
-            x += CONSTANT.cardWidth + 15;
+            JLabel label = new JLabel(b.getStatusDesc());
+            label.setVisible(true);
+            label.setForeground(Color.white);
+            label.setBounds(CONSTANT.selfBuffLabelX - 10,y,CONSTANT.selfBuffDesWidth,CONSTANT.selfBuffDesHeight);
+            container.add(label);
+            buffLabels.add(label);
+            y -= CONSTANT.selfBuffDesHeight - 5;
         }
 
         repaint();
     }
 
     public void setBuffStatusUnvisible() {
-        if(buffButtons != null) {
-            for(int i=0;i<buffButtons.size();i++) {
-                JButton button = buffButtons.get(i);
-                container.remove(button);
+        if(buffLabels != null) {
+            for(int i=0;i<buffLabels.size();i++) {
+                JLabel label = buffLabels.get(i);
+                container.remove(label);
             }
-            buffButtons.clear();
+            buffLabels.clear();
         }
         repaint();
+    }
+
+    public void setAfterStatusVisible() {
+
+        java.util.List<AfterCard> cards = new ArrayList<>();
+        if(afterPlayerKeySelf != null)
+            if(afterPlayerKeySelf.getAfterCards() != null)
+                cards.addAll(afterPlayerKeySelf.getAfterCards());
+
+        System.out.println("AfterCards number: " + cards.size());
+    }
+
+    public void setAfterStatusUnvisible() {
+
     }
 
     public void setDesVisible() {
