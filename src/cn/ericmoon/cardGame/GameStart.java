@@ -46,7 +46,7 @@ public class GameStart {
 
             while (true) {
 
-                System.out.println("-------------------------------------------------------------------------");
+                //System.out.println("-------------------------------------------------------------------------");
 
                 f.cardPlayerKeySelf = CpKeySource.getCpk1();
                 f.cardPlayerKeyEnemy = CpKeySource.getCpk2();
@@ -59,13 +59,13 @@ public class GameStart {
                     cpk = CpKeySource.getCpk1();
                     bpk = BpKeySource.getBpk1();
                     f.playerDesciption = "己方玩家出牌";
-                    System.out.println("轮到玩家出牌");
+                    //System.out.println("轮到玩家出牌");
                 }else {
                     apk = ApKeySource.getApk1();//注意 ！！！ 逆清算
                     cpk = CpKeySource.getCpk2();
                     bpk = BpKeySource.getBpk2();
                     f.playerDesciption = "AI正在出牌..";
-                    System.out.println("轮到电脑出牌");
+                    //System.out.println("轮到电脑出牌");
                 }
 
 
@@ -76,7 +76,7 @@ public class GameStart {
 
                 f.refreshAll(); //刷新画面
 
-                System.out.println("repaint执行完毕!");
+                //System.out.println("repaint执行完毕!");
                 Helper.printWait();
 
 
@@ -98,7 +98,7 @@ public class GameStart {
                     sleepTime = 1000;
                 }
 
-                System.out.println("选中了一张牌,index: " + chosenIndex);
+                //System.out.println("选中了一张牌,index: " + chosenIndex);
 
                 //input = scn.nextInt();
 
@@ -106,7 +106,7 @@ public class GameStart {
 
                 Card card = cpk.getCards().get(chosenIndex);//测试注意 get(input - 1)
 
-                System.out.println("您出了:"+card.toString());
+                //System.out.println("您出了:"+card.toString());
 
                 Thread.sleep(sleepTime);
                 BattleController.useCard(cpk.getPlayer(),card);
@@ -123,7 +123,7 @@ public class GameStart {
 
                 playing = !playing;
 
-                System.out.println("完成一次出牌");
+                //System.out.println("完成一次出牌");
 
             }
 
@@ -166,24 +166,24 @@ public class GameStart {
         Player ai = CpKeySource.getCpk2().getPlayer();
 
         System.out.print("PLAYER______:");
-        System.out.println("HP::"+player.getHp()+"//LUCK::"+player.getLuckNum());
-        System.out.println();
-        System.out.println("BUFF::"+BpKeySource.getBpk1().getBuffs()+"//DEBUFF::"+BpKeySource.getBpk1().getDeBuffs());
+        //System.out.println("HP::"+player.getHp()+"//LUCK::"+player.getLuckNum());
+        //System.out.println();
+        //System.out.println("BUFF::"+BpKeySource.getBpk1().getBuffs()+"//DEBUFF::"+BpKeySource.getBpk1().getDeBuffs());
         System.out.println("AFTER::"+ApKeySource.getApk1().getAfterCards());
-        System.out.println();
+        //System.out.println();
 
-        System.out.print("AI__________:");
-        System.out.println("HP::"+ai.getHp()+"//LUCK::"+ai.getLuckNum());
-        System.out.println();
-        System.out.println("BUFF::"+BpKeySource.getBpk2().getBuffs()+"//DEBUFF::"+BpKeySource.getBpk2().getDeBuffs());
-        System.out.println("AFTER::"+ApKeySource.getApk2().getAfterCards());
-        System.out.println();
+        //System.out.print("AI__________:");
+        //System.out.println("HP::"+ai.getHp()+"//LUCK::"+ai.getLuckNum());
+        //System.out.println();
+        //System.out.println("BUFF::"+BpKeySource.getBpk2().getBuffs()+"//DEBUFF::"+BpKeySource.getBpk2().getDeBuffs());
+        //System.out.println("AFTER::"+ApKeySource.getApk2().getAfterCards());
+        //System.out.println();
 
-        System.out.println("当前玩家手牌:");
+        //System.out.println("当前玩家手牌:");
         for (Card card:cpk.getCards()) {
-            System.out.println(">>>>"+card.getCardName()+"<<<<"+":"+'\n'+"伤害数值"+card.toString());
-            System.out.println("card.getCardDesc()" + card.getCardDesc());
-            System.out.println();
+            //System.out.println(">>>>"+card.getCardName()+"<<<<"+":"+'\n'+"伤害数值"+card.toString());
+            //System.out.println("card.getCardDesc()" + card.getCardDesc());
+            //System.out.println();
         }
 
     }

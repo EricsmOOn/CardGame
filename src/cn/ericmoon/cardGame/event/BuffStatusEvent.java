@@ -30,13 +30,13 @@ public class BuffStatusEvent implements MouseListener {
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        System.out.println("进入Buff状态栏!");
+        //System.out.println("进入Buff状态栏!");
         f.setBuffStatusVisible();
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        System.out.println("离开Buff状态栏！");
+        //System.out.println("离开Buff状态栏！");
         f.setBuffStatusUnvisible();
     }
 }
