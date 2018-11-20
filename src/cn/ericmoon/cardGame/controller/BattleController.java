@@ -138,19 +138,20 @@ public class BattleController {
     }
 
 
-    public static void useAfterCardCore(KeyBag keyBag){
+    public static void useAfterCardCore(KeyBag keyBag) {
         //强制类型转换  记得删除
         AfterCard afterCard = (AfterCard) keyBag.getCard();
         AfterPlayerKey apkme = keyBag.getApkme();
 
-        boolean isHaving = false;
-        for (AfterCard a : apkme.getAfterCards()) {
-            if (a.getAfterType() == 3)
-                isHaving = true;
+        if (afterCard.getAfterType() == 3) {
+            boolean isHaving = false;
+            for (AfterCard a : apkme.getAfterCards()) {
+                if (a.getAfterType() == 3)
+                    isHaving = true;
+            }
+            if (!isHaving)
+                apkme.addAfter(afterCard);
         }
-        if (!isHaving)
-            apkme.addAfter(afterCard);
     }
-
 
 }

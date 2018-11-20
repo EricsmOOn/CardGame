@@ -136,7 +136,7 @@ public class RoundController {
         if (!deleteCards.isEmpty()) {
             for (AfterCard ac : deleteCards) {
                 apk.getAfterCards().remove(ac);
-                System.out.println("清算反制牌" + ac.cardName);
+                //System.out.println("清算反制牌" + ac.cardName);
             }
         }
     }
