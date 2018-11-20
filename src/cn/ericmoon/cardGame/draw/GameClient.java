@@ -110,7 +110,7 @@ public class GameClient extends JFrame {
         if(cardPlayerKeySelf != null) {
             removeAllLabels();
             removeAllButtons();
-            System.out.println("chosenIndexOfButton被初始化为：" + chosenIndexOfButton);
+            //System.out.println("chosenIndexOfButton被初始化为：" + chosenIndexOfButton);
         }
     }
 
@@ -242,7 +242,7 @@ public class GameClient extends JFrame {
         if(cardMouseEventsSelf != null) {
             for(CardMouseEvent cardMouseEvent : cardMouseEventsSelf) {
                 if(cardMouseEvent.getChosenIndex() == cardMouseEvent.getIndex()) {
-                    System.out.println("找到了！");
+                    //System.out.println("找到了！");
                     int index = cardMouseEventsSelf.indexOf(cardMouseEvent);
                     Card card = cardPlayerKeySelf.getCards().get(index);
                     JButton button = buttons.get(index);
@@ -391,14 +391,14 @@ public class GameClient extends JFrame {
 //            }
 //        }
 
-        System.out.println("buffcards number: " + cards.size());
+        //System.out.println("buffcards number: " + cards.size());
 
         int x = CONSTANT.frameWidth - cards.size()*(CONSTANT.cardWidth+15);
         int y = CONSTANT.selfBuffLabelY - CONSTANT.cardHeight - 20;
 
         for (Buff b : cards) {
             //TOdo
-            System.out.println(b.getStatusDesc());
+            //System.out.println(b.getStatusDesc());
             JButton button = new JButton(b.getStatusDesc());
             button.setVisible(true);
             button.setForeground(Color.black);

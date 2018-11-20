@@ -26,8 +26,8 @@ public class CardMouseEvent implements MouseListener {
     @Override
     public void mousePressed(MouseEvent e) {
         this.chosenIndex = index;
-        System.out.println("Button" + index + "被选中");
-        System.out.println("它的index: " + index + " chosenIndex:" + chosenIndex);
+        //System.out.println("Button" + index + "被选中");
+        //System.out.println("它的index: " + index + " chosenIndex:" + chosenIndex);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class CardMouseEvent implements MouseListener {
     @Override
     public void mouseEntered(MouseEvent e) {
         if(!beingCovered) {
-            System.out.println("进入卡牌Button " + index);
+            //System.out.println("进入卡牌Button " + index);
             beingCovered = true;
             f.setDesVisible();
         }
@@ -45,7 +45,7 @@ public class CardMouseEvent implements MouseListener {
 
     @Override
     public void mouseExited(MouseEvent e) {
-        System.out.println("离开卡牌Button " + index);
+        //System.out.println("离开卡牌Button " + index);
         f.setDesUnVisible();
         beingCovered = false;
     }
