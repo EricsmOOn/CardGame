@@ -31,12 +31,10 @@ public class AfterStatusEvent implements MouseListener {
     @Override
     public void mouseEntered(MouseEvent e) {
         System.out.println("进入After状态栏");
-        f.setAfterStatusVisible();
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
         System.out.println("离开After状态栏");
-        f.setAfterStatusUnvisible();
     }
 }
