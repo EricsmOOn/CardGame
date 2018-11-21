@@ -1,6 +1,7 @@
 package cn.ericmoon.cardGame.draw;
 
 import cn.ericmoon.cardGame.CONSTANT;
+import cn.ericmoon.cardGame.GameStart;
 import cn.ericmoon.cardGame.cards.AfterCard;
 import cn.ericmoon.cardGame.event.AfterStatusEvent;
 import cn.ericmoon.cardGame.event.BuffStatusEvent;
@@ -8,13 +9,18 @@ import cn.ericmoon.cardGame.event.CardMouseEvent;
 import cn.ericmoon.cardGame.cards.Buff;
 import cn.ericmoon.cardGame.cards.Card;
 import cn.ericmoon.cardGame.cards.DamageCard;
+import cn.ericmoon.cardGame.event.RestartEvent;
 import cn.ericmoon.cardGame.keys.BuffPlayerKey;
 import cn.ericmoon.cardGame.keys.CardPlayerKey;
 import cn.ericmoon.cardGame.keys.AfterPlayerKey;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+
+import static java.lang.System.exit;
 
 @SuppressWarnings("all")
 
@@ -89,7 +95,7 @@ public class GameClient extends JFrame {
         //this.setLayeredPane(layeredPane);
 
         this.container.setLayout(null);
-        this.container.setBackground(Color.lightGray);
+        this.container.setBackground(Color.PINK);
         //layeredPane.add(this.container,JLayeredPane.MODAL_LAYER);
 
         //setSelfBuffLabel();
@@ -105,6 +111,7 @@ public class GameClient extends JFrame {
 */
 
     public void refreshAll() {
+        System.out.println("refresh被调用！");
         removeAllComponents();
         drawButtons();
         drawInfo();
@@ -136,6 +143,8 @@ public class GameClient extends JFrame {
             container.remove(labelAfterSelf);
         if(this.labelExit != null)
             container.remove(labelExit);
+        if(this.labelRestart != null)
+            container.remove(labelRestart);
     }
 
     private void removeAllButtons() {
@@ -401,7 +410,8 @@ public class GameClient extends JFrame {
             JLabel label = new JLabel(b.getStatusDesc());
             label.setVisible(true);
             label.setForeground(Color.white);
-            label.setBounds(CONSTANT.selfBuffLabelX - 10,y,CONSTANT.selfBuffDesWidth,CONSTANT.selfBuffDesHeight);
+            label.setFont(new Font("宋体", Font.BOLD,15));
+            label.setBounds(CONSTANT.selfBuffLabelX - 15,y,CONSTANT.selfBuffDesWidth,CONSTANT.selfBuffDesHeight);
             container.add(label);
             buffLabels.add(label);
             y -= CONSTANT.selfBuffDesHeight - 5;
@@ -412,7 +422,8 @@ public class GameClient extends JFrame {
             JLabel label = new JLabel(b.getStatusDesc());
             label.setVisible(true);
             label.setForeground(Color.white);
-            label.setBounds(CONSTANT.selfBuffLabelX,y,CONSTANT.selfBuffDesWidth,CONSTANT.selfBuffDesHeight);
+            label.setFont(new Font("宋体", Font.BOLD,15));
+            label.setBounds(CONSTANT.selfBuffLabelX - 15,y,CONSTANT.selfBuffDesWidth,CONSTANT.selfBuffDesHeight);
             container.add(label);
             buffLabels.add(label);
             y -= CONSTANT.selfBuffDesHeight - 5;
@@ -588,16 +599,40 @@ public class GameClient extends JFrame {
     }
 
     public void exitGame() {
+        GameStart.continuePlaying = false;
+        System.out.println(GameStart.continuePlaying);
         removeAllComponents();
         repaint();
+        setExitLabel();
+        setRestartLabel();
+        repaint();
+    }
+
+    public void setExitLabel() {
         JLabel exitLabel = new JLabel();
         exitLabel.setVisible(true);
         exitLabel.setIcon(exitImage);
-        exitLabel.setBounds(CONSTANT.frameWidth /2 - exitImage.getIconWidth()/2,CONSTANT.frameHeight/2 + exitImage.getIconHeight(),exitImage.getIconWidth(),exitImage.getIconHeight());
+        exitLabel.setBounds(CONSTANT.frameWidth /2 - exitImage.getIconWidth()/2,CONSTANT.frameHeight/2,exitImage.getIconWidth(),exitImage.getIconHeight());
+        MouseAdapter mouseAdapter = new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                exit(0);
+            }
+        };
+        exitLabel.addMouseListener(mouseAdapter);
         container.add(exitLabel);
-        System.out.println("asafafdasfasfsadfadfasdf");
         labelExit = exitLabel;
-        repaint();
+    }
+
+    public void setRestartLabel() {
+        JLabel restartLabel = new JLabel();
+        restartLabel.setVisible(true);
+        restartLabel.setIcon(restartImage);
+        restartLabel.setBounds(CONSTANT.frameWidth /2 - restartImage.getIconWidth()/2,CONSTANT.frameHeight/2 - restartImage.getIconHeight() - 50,exitImage.getIconWidth(),exitImage.getIconHeight());
+        RestartEvent restartEvent = new RestartEvent(this);
+        restartLabel.addMouseListener(restartEvent);
+        container.add(restartLabel);
+        labelRestart = restartLabel;
     }
 
 }

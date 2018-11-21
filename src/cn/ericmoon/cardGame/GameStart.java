@@ -31,27 +31,33 @@ import static cn.ericmoon.cardGame.enumClass.PlayerEnum.*;
  */
 public class GameStart {
 
+    public static boolean continuePlaying = true;
+
     public static void main(String[] str) {
 
+        GameClient f = new GameClient();
+        f.LaunchFrame();
+
         try {
-
-            //游戏初始化
-            gameInit();
-
-            GameClient f = new GameClient();
-            f.LaunchFrame();
-
-            startGame(f);
-
-            gameOver(f);
-
+            while(true) {
+                Thread.sleep(2);
+                if(continuePlaying) {
+//                    System.out.println("开始了一次游戏");
+                    startGame(f);
+                    gameOver(f);
+                }
+            }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
     }
 
+
     public static void startGame(GameClient f) throws Exception{
+
+
+        System.out.println("进入start");
+        gameInit();
         boolean playing = true;
         AfterPlayerKey apk;
         CardPlayerKey cpk;

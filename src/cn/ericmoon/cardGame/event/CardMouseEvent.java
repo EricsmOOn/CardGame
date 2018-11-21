@@ -21,6 +21,7 @@ public class CardMouseEvent implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
+
     }
 
     @Override
