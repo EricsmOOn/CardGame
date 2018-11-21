@@ -52,6 +52,7 @@ public class GameStart {
                 f.cardPlayerKeyEnemy = CpKeySource.getCpk2();
                 f.buffPlayerkeySelf = BpKeySource.getBpk1();
                 f.buffPlayerKeyEnemy = BpKeySource.getBpk2();
+                f.afterPlayerKeySelf = ApKeySource.getApk1();
                 f.playing = playing;
 
                 if(playing){
@@ -95,7 +96,7 @@ public class GameStart {
                     }
                 } else {
                     chosenIndex = (int)(Math.random() * cpk.getCards().size());
-                    sleepTime = 1000;
+                    sleepTime = 1300;
                 }
 
                 //System.out.println("选中了一张牌,index: " + chosenIndex);
@@ -108,6 +109,8 @@ public class GameStart {
 
                 //System.out.println("您出了:"+card.toString());
 
+                Thread.sleep(700);
+                f.drawUsedCard(card);
                 Thread.sleep(sleepTime);
                 BattleController.useCard(cpk.getPlayer(),card);
                 //System.out.println("HP: " + cpk.getPlayer().getHp());
@@ -127,7 +130,7 @@ public class GameStart {
 
             }
 
-            gameOver();
+            gameOver(f);
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -136,7 +139,7 @@ public class GameStart {
     }
 
 
-    private static Scanner gameInit() throws Exception{
+    private static Scanner gameInit() throws Exception {
 
         Player player = new Player(1,PLAYER_INFO.getMaxHp(),PLAYER_INFO.getHp(), PLAYER_INFO.getMaxCardNum(),
                 PLAYER_INFO.getGetCardNum(),PLAYER_INFO.getLuckNum());
@@ -151,9 +154,10 @@ public class GameStart {
         return  scn;
     }
 
-    private static void gameOver() throws Exception{
+    private static void gameOver(GameClient f) throws Exception{
         if(CpKeySource.getCpk1().getPlayer().getHp() <= 0){
             System.out.println("十年生死两茫茫 大侠请重新来过");
+            f.exitGame();
         }else {
             System.out.println("战胜了第一牌师之后 您从此归隐江湖...");
         }

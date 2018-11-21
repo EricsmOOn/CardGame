@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 @SuppressWarnings("all")
 
+
 public class GameClient extends JFrame {
 
     Toolkit toolkit = this.getToolkit();
@@ -41,8 +42,8 @@ public class GameClient extends JFrame {
     private JLabel labelLuckEnemy;
     private JLabel labelBuffSelf;
     private JLabel labelAfterSelf;
-    private JTextArea cardDescriptionTextArea;
-
+    private JLabel labelExit;
+    private JLabel labelRestart;
 
     public boolean playing = false;
 
@@ -55,6 +56,8 @@ public class GameClient extends JFrame {
     private ImageIcon buffCardImage = new ImageIcon("images/buffCardImage.png");
     private ImageIcon afterCardImage = new ImageIcon("images/afterCardImage.png");
     private ImageIcon buffStatusImage = new ImageIcon("images/buff.png");
+    private ImageIcon exitImage = new ImageIcon("images/EXIT.png");
+    private ImageIcon restartImage = new ImageIcon("images/ReStart.png");
 
     /**
      * 双缓冲
@@ -86,7 +89,7 @@ public class GameClient extends JFrame {
         //this.setLayeredPane(layeredPane);
 
         this.container.setLayout(null);
-        this.container.setBackground(Color.BLACK);
+        this.container.setBackground(Color.lightGray);
         //layeredPane.add(this.container,JLayeredPane.MODAL_LAYER);
 
         //setSelfBuffLabel();
@@ -131,6 +134,8 @@ public class GameClient extends JFrame {
             container.remove(labelBuffSelf);
         if(this.labelAfterSelf != null)
             container.remove(labelAfterSelf);
+        if(this.labelExit != null)
+            container.remove(labelExit);
     }
 
     private void removeAllButtons() {
@@ -175,7 +180,6 @@ public class GameClient extends JFrame {
             int labelX = CONSTANT.frameWidth/2 - 30;
 
             setSelfBuffLabel();
-            setSelfAfterLabel();
 
             for (int i = 0; i < cardPlayerKey.getCards().size(); i++) {
                 Card card = cardPlayerKeySelf.getCards().get(i);
@@ -340,17 +344,6 @@ public class GameClient extends JFrame {
             container.add(label);
     }
 
-    private void setSelfAfterLabel() {
-
-        JLabel label = new JLabel("After");
-        label.setBounds(CONSTANT.selfAfterLabelX, CONSTANT.selfAfterLabelY, CONSTANT.selfBuffLabelWidth, CONSTANT.selfBuffLabelHeight);
-        label.setForeground(Color.white);
-        label.setVisible(true);
-        label.addMouseListener(new AfterStatusEvent(this));
-
-        this.labelBuffSelf = label;
-        container.add(label);
-    }
 
     public void updateButton(int index) {
 
@@ -385,30 +378,41 @@ public class GameClient extends JFrame {
     }
 
     public void setBuffStatusVisible() {
-        java.util.List<Buff> cards = new ArrayList<>();
+        java.util.List<Buff> buffCards = new ArrayList<>();
+        java.util.List<AfterCard> afterCards = new ArrayList<>();
         if(buffPlayerkeySelf != null) {
             if(buffPlayerkeySelf.getBuffs() != null)
-                cards.addAll(buffPlayerkeySelf.getBuffs());
+                buffCards.addAll(buffPlayerkeySelf.getBuffs());
             if(buffPlayerkeySelf.getDeBuffs() != null)
-                cards.addAll(buffPlayerkeySelf.getDeBuffs());
+                buffCards.addAll(buffPlayerkeySelf.getDeBuffs());
         }
-//        if(afterPlayerKeySelf != null) {
-//            if(afterPlayerKeySelf.getAfterCards() != null) {
-//                cards.addAll(afterPlayerKeySelf.getAfterCards());
-//            }
-//        }
+        if(afterPlayerKeySelf != null) {
+           if(afterPlayerKeySelf.getAfterCards() != null) {
+              afterCards.addAll(afterPlayerKeySelf.getAfterCards());
+           }
+       }
 
-        System.out.println("buffcards number: " + cards.size());
+        System.out.println("buffcards number: " + buffCards.size());
 
         int y = CONSTANT.selfBuffLabelY - 30;
 
-        for (Buff b : cards) {
-            //TOdo
-            System.out.println(b.getStatusDesc());
+        for (Buff b : buffCards) {
+            //System.out.println(b.getStatusDesc());
             JLabel label = new JLabel(b.getStatusDesc());
             label.setVisible(true);
             label.setForeground(Color.white);
             label.setBounds(CONSTANT.selfBuffLabelX - 10,y,CONSTANT.selfBuffDesWidth,CONSTANT.selfBuffDesHeight);
+            container.add(label);
+            buffLabels.add(label);
+            y -= CONSTANT.selfBuffDesHeight - 5;
+        }
+
+        for(AfterCard b : afterCards) {
+            //System.out.println(b.getStatusDesc());
+            JLabel label = new JLabel(b.getStatusDesc());
+            label.setVisible(true);
+            label.setForeground(Color.white);
+            label.setBounds(CONSTANT.selfBuffLabelX,y,CONSTANT.selfBuffDesWidth,CONSTANT.selfBuffDesHeight);
             container.add(label);
             buffLabels.add(label);
             y -= CONSTANT.selfBuffDesHeight - 5;
@@ -428,19 +432,6 @@ public class GameClient extends JFrame {
         repaint();
     }
 
-    public void setAfterStatusVisible() {
-
-        java.util.List<AfterCard> cards = new ArrayList<>();
-        if(afterPlayerKeySelf != null)
-            if(afterPlayerKeySelf.getAfterCards() != null)
-                cards.addAll(afterPlayerKeySelf.getAfterCards());
-
-        System.out.println("AfterCards number: " + cards.size());
-    }
-
-    public void setAfterStatusUnvisible() {
-
-    }
 
     public void setDesVisible() {
         if(cardMouseEventsSelf != null) {
@@ -583,6 +574,30 @@ public class GameClient extends JFrame {
             container.add(labelLuck);
             this.labelLuckEnemy = labelLuck;
         }
+    }
+
+    public void drawUsedCard(Card card) {
+        int x = CONSTANT.frameWidth/2 - CONSTANT.cardWidth/2 + 15;
+        int y = CONSTANT.frameHeight/2 - CONSTANT.cardHeight/2 - 50;
+        JButton button = getButton(true,card,card.getCardName(),card.getCardDesc(),x,y,CONSTANT.cardWidth,CONSTANT.cardHeight);
+        button.setVisible(true);
+        button.getComponent(1).setVisible(true);
+        container.add(button);
+        buttons.add(button);
+        repaint();
+    }
+
+    public void exitGame() {
+        removeAllComponents();
+        repaint();
+        JLabel exitLabel = new JLabel();
+        exitLabel.setVisible(true);
+        exitLabel.setIcon(exitImage);
+        exitLabel.setBounds(CONSTANT.frameWidth /2 - exitImage.getIconWidth()/2,CONSTANT.frameHeight/2 + exitImage.getIconHeight(),exitImage.getIconWidth(),exitImage.getIconHeight());
+        container.add(exitLabel);
+        System.out.println("asafafdasfasfsadfadfasdf");
+        labelExit = exitLabel;
+        repaint();
     }
 
 }
