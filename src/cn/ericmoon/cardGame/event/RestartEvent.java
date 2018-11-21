@@ -24,7 +24,7 @@ public class RestartEvent implements MouseListener {
     public void mousePressed(MouseEvent e) {
        try {
            GameStart.continuePlaying = true;
-           System.out.println(GameStart.continuePlaying);
+           System.out.println("游戏继续...");
        } catch (Exception ex) {
            ex.printStackTrace();
        }

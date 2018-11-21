@@ -19,6 +19,7 @@ import cn.ericmoon.cardGame.keys.AllKeyInit;
 
 import java.util.Scanner;
 
+import static cn.ericmoon.cardGame.enumClass.AfterEnum.AFTER_ATTACK;
 import static cn.ericmoon.cardGame.enumClass.AfterEnum.AFTER_DEAD;
 import static cn.ericmoon.cardGame.enumClass.DamageEnum.COMMON_ATTACK;
 import static cn.ericmoon.cardGame.enumClass.PlayerEnum.*;
@@ -56,7 +57,7 @@ public class GameStart {
     public static void startGame(GameClient f) throws Exception{
 
 
-        System.out.println("进入start");
+        //System.out.println("进入start");
         gameInit();
         boolean playing = true;
         AfterPlayerKey apk;
@@ -184,6 +185,7 @@ public class GameStart {
             f.exitGame();
         }else {
             System.out.println("游戏胜利...");
+            f.exitGame();
         }
     }
 

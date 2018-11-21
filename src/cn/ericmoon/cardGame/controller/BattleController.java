@@ -151,6 +151,9 @@ public class BattleController {
             }
             if (!isHaving)
                 apkme.addAfter(afterCard);
+        }else {
+            apkme.addAfter(afterCard);
+
         }
     }
 

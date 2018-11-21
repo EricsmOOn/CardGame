@@ -111,7 +111,7 @@ public class GameClient extends JFrame {
 */
 
     public void refreshAll() {
-        System.out.println("refresh被调用！");
+        //System.out.println("refresh被调用！");
         removeAllComponents();
         drawButtons();
         drawInfo();
@@ -122,7 +122,7 @@ public class GameClient extends JFrame {
         if(cardPlayerKeySelf != null) {
             removeAllLabels();
             removeAllButtons();
-            System.out.println("chosenIndexOfButton被初始化为：" + chosenIndexOfButton);
+            //System.out.println("chosenIndexOfButton被初始化为：" + chosenIndexOfButton);
         }
     }
 
@@ -260,7 +260,7 @@ public class GameClient extends JFrame {
         if(cardMouseEventsSelf != null) {
             for(CardMouseEvent cardMouseEvent : cardMouseEventsSelf) {
                 if(cardMouseEvent.getChosenIndex() == cardMouseEvent.getIndex()) {
-                    System.out.println("找到了！");
+                    //System.out.println("找到了！");
                     int index = cardMouseEventsSelf.indexOf(cardMouseEvent);
                     Card card = cardPlayerKeySelf.getCards().get(index);
                     JButton button = buttons.get(index);
@@ -401,7 +401,7 @@ public class GameClient extends JFrame {
            }
        }
 
-        System.out.println("buffcards number: " + buffCards.size());
+        //System.out.println("buffcards number: " + buffCards.size());
 
         int y = CONSTANT.selfBuffLabelY - 30;
 
@@ -565,7 +565,7 @@ public class GameClient extends JFrame {
 
         if(cardPlayerKeySelf != null) {
             JLabel labelLuck = new JLabel();
-            labelLuck.setText("Luck:" + cardPlayerKeySelf.getPlayer().getLuckNum());
+            labelLuck.setText("Luck:" + String.format("%.2f",cardPlayerKeySelf.getPlayer().getLuckNum()));
             labelLuck.setBounds(x,y,100,100);
             labelLuck.setFont(new Font("宋体",1,19));
             labelLuck.setForeground(Color.white);
@@ -578,7 +578,7 @@ public class GameClient extends JFrame {
 
         if(cardPlayerKeyEnemy != null) {
             JLabel labelLuck = new JLabel();
-            labelLuck.setText("Luck:" + cardPlayerKeyEnemy.getPlayer().getLuckNum());
+            labelLuck.setText("Luck:" + String.format("%.2f",cardPlayerKeyEnemy.getPlayer().getLuckNum()));
             labelLuck.setBounds(x,y,100,100);
             labelLuck.setFont(new Font("宋体",1,19));
             labelLuck.setForeground(Color.white);
@@ -600,7 +600,7 @@ public class GameClient extends JFrame {
 
     public void exitGame() {
         GameStart.continuePlaying = false;
-        System.out.println(GameStart.continuePlaying);
+        System.out.println("游戏结束...");
         removeAllComponents();
         repaint();
         setExitLabel();

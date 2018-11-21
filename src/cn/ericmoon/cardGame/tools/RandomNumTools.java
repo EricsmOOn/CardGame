@@ -20,8 +20,7 @@ public class RandomNumTools {
      * @return  int
      */
     public static int cardChoose(){
-        double random = Math.random()*4;
-//        double random = Math.random()*4;
+        double random = Math.random()*10;
 
         if (random < 4) return 1;
         else if (random < 7) return 2;

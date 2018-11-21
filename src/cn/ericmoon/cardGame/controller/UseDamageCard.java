@@ -87,6 +87,7 @@ public class UseDamageCard {
     public static void afterCount(KeyBag keyBag,int damage){
         //反制卡牌清算
         List<AfterCard> afterCards = keyBag.getApken().getAfterCards();
+
         AfterCard toBeDeleted  = null;
         boolean havingType1 = false;
 
