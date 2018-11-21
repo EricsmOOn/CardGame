@@ -21,6 +21,8 @@ public class RandomNumTools {
      */
     public static int cardChoose(){
         double random = Math.random()*10;
+//        double random = Math.random()*4;
+
         if (random < 4) return 1;
         else if (random < 7) return 2;
         else return 3;
