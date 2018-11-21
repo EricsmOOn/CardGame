@@ -15,28 +15,30 @@ import java.util.List;
 public class DeadController {
 
     /**
-     * @Description
-     * 死亡前检测
-     * @parameters  [player]
-     * @return  boolean
+     * @return boolean
+     * @Description 死亡前检测
+     * @parameters [player]
      */
     public static boolean preDeadController(AfterPlayerKey apk) throws Exception {
+        AfterCard deleteAfter = null;
         Player player = apk.getPlayer();
         if (player.getHp() <= 0) {
             boolean isDead = true;
-            //System.out.println("死亡检测开始...");
             List<AfterCard> afterCards = apk.getAfterCards();
-            for (AfterCard after : afterCards) {
-                if (after.getAfterType() == 3) {
-                    //System.out.println("有一次免死...");
-                    player.setHp(1);
-                    apk.deleteAfter(after);
-                    isDead = false;
+            if (afterCards != null && !afterCards.isEmpty()) {
+                for (AfterCard after : afterCards) {
+                    if (after.getAfterType() == 3) {
+                        player.setHp(1);
+                        deleteAfter = after;
+                        isDead = false;
+                    }
                 }
-            }
-            if (isDead) {
-                //System.out.println("确认死亡...");
-                player.setHp(0);
+                if(deleteAfter != null)
+                    apk.deleteAfter(deleteAfter);
+                if (isDead) {
+                    //System.out.println("确认死亡...");
+                    player.setHp(0);
+                }
             }
             return isDead;
         }

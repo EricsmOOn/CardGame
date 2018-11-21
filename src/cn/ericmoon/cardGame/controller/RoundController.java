@@ -128,15 +128,19 @@ public class RoundController {
     public static void countAfters(AfterPlayerKey apk) throws Exception {
         List<AfterCard> deleteCards = new ArrayList<>();
 
-        for (AfterCard ac : apk.getAfterCards()) {
-            if (ac.getAfterType() != 3) {
-                deleteCards.add(ac);
+        List<AfterCard> afterCards = apk.getAfterCards();
+
+        if (afterCards != null && !afterCards.isEmpty()) {
+            for (AfterCard ac : afterCards) {
+                if (ac.getAfterType() != 3) {
+                    deleteCards.add(ac);
+                }
             }
-        }
-        if (!deleteCards.isEmpty()) {
-            for (AfterCard ac : deleteCards) {
-                apk.getAfterCards().remove(ac);
-                //System.out.println("清算反制牌" + ac.cardName);
+            if (!deleteCards.isEmpty()) {
+                for (AfterCard ac : deleteCards) {
+                    apk.getAfterCards().remove(ac);
+                    //System.out.println("清算反制牌" + ac.cardName);
+                }
             }
         }
     }
