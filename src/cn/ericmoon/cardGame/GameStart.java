@@ -182,10 +182,10 @@ public class GameStart {
     private static void gameOver(GameClient f) throws Exception{
         if(CpKeySource.getCpk1().getPlayer().getHp() <= 0){
             System.out.println("游戏失败...");
-            f.exitGame();
+            f.exitGame(false);
         }else {
             System.out.println("游戏胜利...");
-            f.exitGame();
+            f.exitGame(true);
         }
     }
 

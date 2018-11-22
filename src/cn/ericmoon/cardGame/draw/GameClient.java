@@ -14,10 +14,12 @@ import cn.ericmoon.cardGame.keys.BuffPlayerKey;
 import cn.ericmoon.cardGame.keys.CardPlayerKey;
 import cn.ericmoon.cardGame.keys.AfterPlayerKey;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import static java.lang.System.exit;
@@ -50,6 +52,7 @@ public class GameClient extends JFrame {
     private JLabel labelAfterSelf;
     private JLabel labelExit;
     private JLabel labelRestart;
+    private JLabel labelSuccess;
 
     public boolean playing = false;
 
@@ -58,12 +61,43 @@ public class GameClient extends JFrame {
     ArrayList<CardMouseEvent> cardMouseEventsSelf = new ArrayList<>();
     ArrayList<CardMouseEvent> cardMouseEventsEnemy = new ArrayList<>();
 
-    private ImageIcon damageCardImage = new ImageIcon("images/damageCardImage.png");
-    private ImageIcon buffCardImage = new ImageIcon("images/buffCardImage.png");
-    private ImageIcon afterCardImage = new ImageIcon("images/afterCardImage.png");
-    private ImageIcon buffStatusImage = new ImageIcon("images/buff.png");
-    private ImageIcon exitImage = new ImageIcon("images/EXIT.png");
-    private ImageIcon restartImage = new ImageIcon("images/ReStart.png");
+    private static BufferedImage damage;
+    private static BufferedImage buffc;
+    private static BufferedImage after;
+    private static BufferedImage buffs;
+    private static BufferedImage exit;
+    private static BufferedImage restart;
+
+
+    static {
+        try {
+             damage = ImageIO.read(GameClient.class.getResource("images/damageCardImage.png"));
+             buffc = ImageIO.read(GameClient.class.getResource("images/buffCardImage.png"));
+             after = ImageIO.read(GameClient.class.getResource("images/afterCardImage.png"));
+             buffs = ImageIO.read(GameClient.class.getResource("images/buff.png"));
+             exit = ImageIO.read(GameClient.class.getResource("images/EXIT.png"));
+             restart = ImageIO.read(GameClient.class.getResource("images/ReStart.png"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private ImageIcon damageCardImage = new ImageIcon(damage);
+    private ImageIcon buffCardImage = new ImageIcon(buffc);
+    private ImageIcon afterCardImage = new ImageIcon(after);
+    private ImageIcon buffStatusImage = new ImageIcon(buffs);
+    private ImageIcon exitImage = new ImageIcon(exit);
+    private ImageIcon restartImage = new ImageIcon(restart);
+
+
+//
+//    private ImageIcon damageCardImage = new ImageIcon(this.getClass().getResource("images/damageCardImage.png"));
+//    private ImageIcon buffCardImage = new ImageIcon(this.getClass().getResource("images/buffCardImage.png"));
+//    private ImageIcon afterCardImage = new ImageIcon(this.getClass().getResource("images/afterCardImage.png)"));
+//    private ImageIcon buffStatusImage = new ImageIcon(this.getClass().getResource("images/buff.png"));
+//    private ImageIcon exitImage = new ImageIcon(this.getClass().getResource("images/EXIT.png"));
+//    private ImageIcon restartImage = new ImageIcon(this.getClass().getResource("images/ReStart.png"));
+
 
     /**
      * 双缓冲
@@ -145,6 +179,8 @@ public class GameClient extends JFrame {
             container.remove(labelExit);
         if(this.labelRestart != null)
             container.remove(labelRestart);
+        if(this.labelSuccess != null)
+            container.remove(labelSuccess);
     }
 
     private void removeAllButtons() {
@@ -598,13 +634,14 @@ public class GameClient extends JFrame {
         repaint();
     }
 
-    public void exitGame() {
+    public void exitGame(boolean isSuccess) {
         GameStart.continuePlaying = false;
         System.out.println("游戏结束...");
         removeAllComponents();
         repaint();
         setExitLabel();
         setRestartLabel();
+        setSuccessLabel(isSuccess);
         repaint();
     }
 
@@ -633,6 +670,23 @@ public class GameClient extends JFrame {
         restartLabel.addMouseListener(restartEvent);
         container.add(restartLabel);
         labelRestart = restartLabel;
+    }
+
+    public void setSuccessLabel(boolean isSuccess) {
+        JLabel label = new JLabel();
+        if(isSuccess){
+            label.setText("恭喜您获得胜利!");
+            label.setForeground(Color.red);
+        }
+        else {
+            label.setText("很遗憾您输了...");
+            label.setForeground(Color.darkGray);
+        }
+        label.setBounds(CONSTANT.frameWidth /2 - 100,CONSTANT.frameHeight/2 - restartImage.getIconHeight() - 200,300,
+                100);
+        label.setFont(new Font("宋体",1,30));
+        container.add(label);
+        this.labelSuccess = label;
     }
 
 }
